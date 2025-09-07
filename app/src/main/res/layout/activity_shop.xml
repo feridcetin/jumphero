@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@drawable/background"
+    tools:context=".ShopActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/shop_button"
+        android:textSize="36sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="48dp" />
+
+    <Button
+        android:id="@+id/removeAdsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buy_ad_free"
+        android:textSize="20sp"
+        android:padding="16dp"
+        android:backgroundTint="#FF9800"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/unlockCharactersButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/unlock_characters"
+        android:textSize="20sp"
+        android:padding="16dp"
+        android:backgroundTint="#4CAF50"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/advancedThemeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buy_advanced_theme"
+        android:textSize="20sp"
+        android:padding="16dp"
+        android:backgroundTint="#673AB7"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/buyCoinsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buy_coins"
+        android:textSize="20sp"
+        android:padding="16dp"
+        android:backgroundTint="#03A9F4" />
+
+</LinearLayout>

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Zıplayan Kahraman</string>
+    <string name="play_button">Oyna</string>
+    <string name="settings_button">Ayarlar</string>
+    <string name="shop_button">Dükkan</string>
+    <string name="game_over">Oyun Bitti!</string>
+    <string name="high_score">En Yüksek Skor: %d</string>
+    <string name="unlock_characters">Yeni Karakterlerin Kilidini Aç</string>
+    <string name="remove_ads">Reklamları Kaldır</string>
+    <string name="buy_coins">Para Satın Al</string>
+    <string name="language">Dil</string>
+    <string name="turkish">Türkçe</string>
+    <string name="english">İngilizce</string>
+    <string name="advanced_theme_pack">Gelişmiş Tema Paketi</string>
+    <string name="buy_ad_free">Reklamları Kaldır</string>
+    <string name="buy_advanced_theme">Gelişmiş Tema Al</string>
+    <string name="other_settings_text">Diğer Ayarlar Buraya Gelecek</string>
+</resources>

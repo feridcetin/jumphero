@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Jump Hero</string>
+    <string name="play_button">Play</string>
+    <string name="settings_button">Settings</string>
+    <string name="shop_button">Shop</string>
+    <string name="game_over">Game Over!</string>
+    <string name="high_score">High Score: %d</string>
+    <string name="unlock_characters">Unlock New Characters</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="buy_coins">Buy Coins</string>
+    <string name="language">Language</string>
+    <string name="turkish">Türkçe</string>
+    <string name="english">English</string>
+    <string name="advanced_theme_pack">Advanced Theme Pack</string>
+    <string name="buy_ad_free">Buy Ad-Free</string>
+    <string name="buy_advanced_theme">Buy Advanced Theme</string>
+    <string name="other_settings_text">Other Settings Will Come Here</string>
+</resources>
