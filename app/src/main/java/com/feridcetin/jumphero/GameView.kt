@@ -1,11 +1,12 @@
 package com.feridcetin.jumphero
 
+
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix // Bitmap'i ölçeklemek için eklendi
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.MotionEvent
@@ -48,10 +49,10 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private val lifeIconSize = 80
     private val lifeIconMargin = 10f
 
-    private lateinit var backgroundBitmapOriginal: Bitmap // Orijinal arka plan resmini tutacak
-    private lateinit var backgroundBitmapScaled: Bitmap  // Ölçeklenmiş arka plan resmini tutacak
+    private lateinit var backgroundBitmapOriginal: Bitmap
+    private lateinit var backgroundBitmapScaled: Bitmap
     private var backgroundX1: Float = 0f
-    private var backgroundX2: Float = 0f // İkinci arka plan için
+    private var backgroundX2: Float = 0f
 
     init {
         holder.addCallback(this)
@@ -64,15 +65,10 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         characterBitmap = BitmapFactory.decodeResource(resources, characterResId)
         characterBitmap = Bitmap.createScaledBitmap(characterBitmap, characterSize.toInt(), characterSize.toInt(), true)
 
-        backgroundBitmapOriginal = BitmapFactory.decodeResource(resources, R.drawable.background) // Orijinal resmi yüklüyoruz
+        backgroundBitmapOriginal = BitmapFactory.decodeResource(resources, R.drawable.background)
 
-        if (hasAdvancedTheme) {
-            scorePaint.color = Color.WHITE
-            bottomBoundaryPaint.color = Color.WHITE
-        } else {
-            scorePaint.color = Color.BLACK
-            bottomBoundaryPaint.color = Color.BLACK
-        }
+        scorePaint.color = Color.parseColor("#FFD700")
+        bottomBoundaryPaint.color = Color.parseColor("#FFD700")
 
         scorePaint.textSize = 80f
         scorePaint.isFakeBoldText = true
@@ -88,12 +84,10 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         characterY = (screenHeight / 2).toFloat()
         createInitialObstacles()
 
-        // Arka plan resmini ekran yüksekliğine göre ölçekle
         val aspectRatio = backgroundBitmapOriginal.width.toFloat() / backgroundBitmapOriginal.height.toFloat()
         val scaledWidth = (screenHeight * aspectRatio).toInt()
         backgroundBitmapScaled = Bitmap.createScaledBitmap(backgroundBitmapOriginal, scaledWidth, screenHeight, true)
 
-        // İkinci arka plan resminin başlangıç pozisyonunu ayarla
         backgroundX2 = backgroundBitmapScaled.width.toFloat()
 
         isReady = true
@@ -127,29 +121,19 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private fun update() {
         if (!isReady || isGameOver) return
 
-        // Arka planı kaydır
-        val backgroundScrollSpeed = 2f // Hızı ayarla, engellerden yavaş olsun
+        val backgroundScrollSpeed = 2f
         backgroundX1 -= backgroundScrollSpeed
         backgroundX2 -= backgroundScrollSpeed
 
-        // İlk resim ekranın solundan tamamen çıktıysa, ikincinin sağına konumlandır
         if (backgroundX1 < -backgroundBitmapScaled.width) {
             backgroundX1 = backgroundX2 + backgroundBitmapScaled.width
         }
-        // İkinci resim ekranın solundan tamamen çıktıysa, ilkinin sağına konumlandır
         if (backgroundX2 < -backgroundBitmapScaled.width) {
             backgroundX2 = backgroundX1 + backgroundBitmapScaled.width
         }
 
         characterVelocity += gravity
         characterY += characterVelocity
-
-        if (characterY + characterCollisionRadius >= screenHeight || characterY - characterCollisionRadius <= 0) {
-            isGameOver = true
-            isPlaying = false
-            showGameOverDialog()
-            return
-        }
 
         val characterX = (screenWidth / 4).toFloat()
         characterRect.set(
@@ -159,24 +143,32 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             characterY + characterCollisionRadius
         )
 
-        for (obstacle in obstacles) {
-            val obstacleRect = RectF(obstacle.x, obstacle.top, obstacle.x + obstacle.width, obstacle.bottom)
-
-            if (characterRect.intersect(obstacleRect)) {
-
-                lives--
-
-                if (lives <= 0) {
-                    isGameOver = true
-                    isPlaying = false
-                    showGameOverDialog()
-                    return
-                } else {
-                    resetCharacterAndObstacles()
-                    return
+        var collisionOccurred = false
+        if (characterY + characterCollisionRadius >= screenHeight || characterY - characterCollisionRadius <= 0) {
+            collisionOccurred = true
+        } else {
+            for (obstacle in obstacles) {
+                val obstacleRect = RectF(obstacle.x, obstacle.top, obstacle.x + obstacle.width, obstacle.bottom)
+                if (characterRect.intersect(obstacleRect)) {
+                    collisionOccurred = true
+                    break
                 }
             }
+        }
 
+        if (collisionOccurred) {
+            lives--
+            if (lives <= 0) {
+                isGameOver = true
+                isPlaying = false
+                showGameOverDialog()
+            } else {
+                resetCharacterAndObstacles()
+            }
+            return
+        }
+
+        for (obstacle in obstacles) {
             obstacle.x -= 10f
             if (obstacle.x + obstacle.width < 0) {
                 obstacles.remove(obstacle)
@@ -192,8 +184,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         if (holder.surface.isValid) {
             val canvas = holder.lockCanvas()
 
-            // Arka plan resimlerini çiz
-            // Ölçeklenmiş bitmap'i kullanıyoruz
             canvas.drawBitmap(backgroundBitmapScaled, backgroundX1, 0f, null)
             canvas.drawBitmap(backgroundBitmapScaled, backgroundX2, 0f, null)
 
@@ -215,9 +205,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             val charDrawY = characterY - characterSize / 2
             canvas.drawBitmap(characterBitmap, charDrawX, charDrawY, null)
 
-            canvas.drawText(score.toString(), (screenWidth - 100).toFloat(), 100f, scorePaint)
+            // Yeni: Skoru dinamik olarak konumlandır
+            val scoreText = score.toString()
+            val scoreTextWidth = scorePaint.measureText(scoreText)
+            canvas.drawText(scoreText, screenWidth.toFloat() - scoreTextWidth - 50f, 100f, scorePaint)
 
             canvas.drawRect(0f, screenHeight.toFloat() - 20f, screenWidth.toFloat(), screenHeight.toFloat(), bottomBoundaryPaint)
+            canvas.drawRect(0f, 0f, screenWidth.toFloat(), 20f, bottomBoundaryPaint)
 
             holder.unlockCanvasAndPost(canvas)
         }
