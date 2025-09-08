@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -205,7 +206,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             val charDrawY = characterY - characterSize / 2
             canvas.drawBitmap(characterBitmap, charDrawX, charDrawY, null)
 
-            // Yeni: Skoru dinamik olarak konumlandır
             val scoreText = score.toString()
             val scoreTextWidth = scorePaint.measureText(scoreText)
             canvas.drawText(scoreText, screenWidth.toFloat() - scoreTextWidth - 50f, 100f, scorePaint)
@@ -264,20 +264,70 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         thread?.start()
     }
 
-    private fun showGameOverDialog() {
+    fun showGameOverDialog() {
+        (context as GameActivity).runOnUiThread {
+            if (lives <= 0) {
+                AlertDialog.Builder(context)
+                    .setTitle("Oyun Bitti!")
+                    .setMessage("Devam etmek ister misiniz?\nDevam etmek için reklam izleyiniz.")
+                    .setPositiveButton("Evet") { dialog, which ->
+                        dialog.dismiss()
+                        (context as GameActivity).showRewardedAd()
+                    }
+                    .setNegativeButton("Ana Menü") { dialog, which ->
+                        dialog.dismiss()
+                        (context as GameActivity).finish()
+                    }
+                    .setCancelable(false)
+                    .show()
+            } else {
+                AlertDialog.Builder(context)
+                    .setTitle("Oyun Bitti!")
+                    .setMessage("Skorunuz: $score")
+                    .setPositiveButton("Yeniden Başla") { dialog, which ->
+                        dialog.dismiss()
+                        resetGame()
+                    }
+                    .setNegativeButton("Ana Menü") { dialog, which ->
+                        dialog.dismiss()
+                        (context as GameActivity).finish()
+                    }
+                    .setCancelable(false)
+                    .show()
+            }
+        }
+    }
+
+    // Reklam izlendikten sonra çağrılacak metot
+    fun grantLifeAndShowResumeDialog() {
+        Log.d("GameView", "Reklam izlendi, can hakkı verildi.")
+        lives++ // Can hakkını 1 artır
+        showResumeDialog()
+    }
+
+    // Reklamdan sonra oyunu başlatmak için yeni diyalog gösterir
+    private fun showResumeDialog() {
         (context as GameActivity).runOnUiThread {
             AlertDialog.Builder(context)
-                .setTitle("Oyun Bitti!")
-                .setMessage("Skorunuz: $score")
-                .setPositiveButton("Yeniden Başla") { dialog, which ->
-                    resetGame()
-                }
-                .setNegativeButton("Ana Menü") { dialog, which ->
-                    (context as GameActivity).finish()
+                .setTitle("Tebrikler!")
+                .setMessage("Reklam izlendi, can hakkınız arttı. Oyuna devam etmek için Tamam'a basın.")
+                .setPositiveButton("Tamam") { dialog, which ->
+                    dialog.dismiss()
+                    resumeGame()
                 }
                 .setCancelable(false)
                 .show()
         }
+    }
+
+    // Oyunu kaldığı yerden devam ettirir
+    private fun resumeGame() {
+        isGameOver = false
+        isPlaying = true
+        resetCharacterAndObstacles()
+        thread = Thread(this)
+        thread?.start()
+        isReady = true
     }
 
     private fun resetGame() {
