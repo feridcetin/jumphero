@@ -1,6 +1,5 @@
 package com.feridcetin.jumphero
 
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -28,9 +27,19 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var score: Int = 0
     private var lives: Int = 3
 
+    private var level: Int = 1
+    private val scoreToLevelUp: Int = 20
+    private var previousScoreForLevel: Int = 0
+    private var obstacleSpeed: Float = 10f
+
+    // Engel yüksekliği değişkenleri
+    private val baseObstacleHeight: Float = 200f // Temel engel boyu
+    private val heightIncreasePerLevel: Float = 20f // Her seviyede artacak boy
+
     private val obstaclePaint = Paint()
     private val scorePaint = Paint()
     private val bottomBoundaryPaint = Paint()
+    private val levelPaint = Paint()
 
     private var characterY: Float = 0f
     private var characterVelocity: Float = 0f
@@ -73,6 +82,10 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
         scorePaint.textSize = 80f
         scorePaint.isFakeBoldText = true
+
+        levelPaint.color = Color.WHITE
+        levelPaint.textSize = 80f
+        levelPaint.isFakeBoldText = true
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -170,11 +183,17 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
 
         for (obstacle in obstacles) {
-            obstacle.x -= 10f
+            obstacle.x -= obstacleSpeed
             if (obstacle.x + obstacle.width < 0) {
                 obstacles.remove(obstacle)
                 addNewObstacle()
                 score++
+
+                if (score > previousScoreForLevel && score % scoreToLevelUp == 0) {
+                    level++
+                    previousScoreForLevel = score
+                    obstacleSpeed += 1f
+                }
             }
         }
     }
@@ -206,9 +225,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             val charDrawY = characterY - characterSize / 2
             canvas.drawBitmap(characterBitmap, charDrawX, charDrawY, null)
 
-            val scoreText = score.toString()
+            val scoreText = "Skor: $score"
             val scoreTextWidth = scorePaint.measureText(scoreText)
             canvas.drawText(scoreText, screenWidth.toFloat() - scoreTextWidth - 50f, 100f, scorePaint)
+
+            val levelText = "Seviye: $level"
+            val levelTextWidth = levelPaint.measureText(levelText)
+            canvas.drawText(levelText, screenWidth.toFloat() - levelTextWidth - 50f, 200f, levelPaint)
 
             canvas.drawRect(0f, screenHeight.toFloat() - 20f, screenWidth.toFloat(), screenHeight.toFloat(), bottomBoundaryPaint)
             canvas.drawRect(0f, 0f, screenWidth.toFloat(), 20f, bottomBoundaryPaint)
@@ -228,8 +251,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         obstacles.clear()
         for (i in 0 until initialObstacleCount) {
             val randomColor = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
+            val currentObstacleHeight = baseObstacleHeight + (level - 1) * heightIncreasePerLevel
             val obstacleY = random.nextFloat() * (screenHeight - 400) + 200
-            val obstacle = Obstacle(screenWidth.toFloat() + obstacleSpacing * i, obstacleY, randomColor)
+            val obstacle = Obstacle(screenWidth.toFloat() + obstacleSpacing * i, obstacleY, randomColor, currentObstacleHeight)
             obstacles.add(obstacle)
         }
     }
@@ -237,8 +261,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private fun addNewObstacle() {
         val lastObstacle = obstacles.last()
         val randomColor = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
+        val currentObstacleHeight = baseObstacleHeight + (level - 1) * heightIncreasePerLevel
         val newObstacleY = random.nextFloat() * (screenHeight - 400) + 200
-        val newObstacle = Obstacle(lastObstacle.x + obstacleSpacing, newObstacleY, randomColor)
+        val newObstacle = Obstacle(lastObstacle.x + obstacleSpacing, newObstacleY, randomColor, currentObstacleHeight)
         obstacles.add(newObstacle)
     }
 
@@ -298,14 +323,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
     }
 
-    // Reklam izlendikten sonra çağrılacak metot
     fun grantLifeAndShowResumeDialog() {
         Log.d("GameView", "Reklam izlendi, can hakkı verildi.")
-        lives++ // Can hakkını 1 artır
+        lives++
         showResumeDialog()
     }
 
-    // Reklamdan sonra oyunu başlatmak için yeni diyalog gösterir
     private fun showResumeDialog() {
         (context as GameActivity).runOnUiThread {
             AlertDialog.Builder(context)
@@ -320,7 +343,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
     }
 
-    // Oyunu kaldığı yerden devam ettirir
     private fun resumeGame() {
         isGameOver = false
         isPlaying = true
@@ -333,6 +355,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private fun resetGame() {
         score = 0
         lives = 3
+        level = 1
+        previousScoreForLevel = 0
+        obstacleSpeed = 10f
         characterY = (screenHeight / 2).toFloat()
         characterVelocity = 0f
         obstacles.clear()
@@ -344,9 +369,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         isReady = true
     }
 
-    data class Obstacle(var x: Float, var y: Float, var color: Int) {
+    data class Obstacle(var x: Float, var y: Float, var color: Int, var height: Float) {
         val width = 200f
-        val height = 400f
         val top = y - height / 2
         val bottom = y + height / 2
     }
