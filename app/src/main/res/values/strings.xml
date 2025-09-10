@@ -15,4 +15,5 @@
     <string name="buy_ad_free">Buy Ad-Free</string>
     <string name="buy_advanced_theme">Buy Advanced Theme</string>
     <string name="other_settings_text">Other Settings Will Come Here</string>
+    <string name="exit_button">Exit</string>
 </resources>

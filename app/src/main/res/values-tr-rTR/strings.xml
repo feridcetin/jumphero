@@ -15,4 +15,5 @@
     <string name="buy_ad_free">Reklamları Kaldır</string>
     <string name="buy_advanced_theme">Gelişmiş Tema Al</string>
     <string name="other_settings_text">Diğer Ayarlar Buraya Gelecek</string>
+    <string name="exit_button">Çıkış</string>
 </resources>

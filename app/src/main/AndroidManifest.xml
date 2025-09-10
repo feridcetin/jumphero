@@ -13,7 +13,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Jumphero">
+        android:theme="@style/Theme.Jumphero"
+        android:name=".MainApplication">
+        <activity
+            android:name=".SettingActivity"
+            android:exported="false" />
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
