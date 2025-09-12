@@ -32,6 +32,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var previousScoreForLevel: Int = 0
     private var obstacleSpeed: Float = 10f
 
+    // Bonus can için yeni değişken
+    private var isBonusLifeGiven: Boolean = false
+
     // Engel yüksekliği değişkenleri
     private val baseObstacleHeight: Float = 200f // Temel engel boyu
     private val heightIncreasePerLevel: Float = 20f // Her seviyede artacak boy
@@ -189,12 +192,21 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                 addNewObstacle()
                 score++
 
+                // Seviye atlama kontrolü
                 if (score > previousScoreForLevel && score % scoreToLevelUp == 0) {
                     level++
                     previousScoreForLevel = score
                     obstacleSpeed += 1f
+                    isBonusLifeGiven = false // Yeni seviyede bonus can hakkını sıfırla
                 }
             }
+        }
+
+        // Seviye 3 ve katlarında can ekleme
+        if (level > 0 && level % 3 == 0 && !isBonusLifeGiven) {
+            lives++
+            isBonusLifeGiven = true // Canı verdikten sonra true yap ki tekrar verilmesin
+            //showBonusLifeDialog()
         }
     }
 
@@ -294,12 +306,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             if (lives <= 0) {
                 AlertDialog.Builder(context)
                     .setTitle("Oyun Bitti!")
-                    .setMessage("Devam etmek ister misiniz?\nDevam etmek için reklam izleyiniz.")
+                    .setMessage("Skorunuz: $score\n\nÖdüllü reklam izleyerek ekstra bir can kazanmak ister misin?")
                     .setPositiveButton("Evet") { dialog, which ->
                         dialog.dismiss()
                         (context as GameActivity).showRewardedAd()
                     }
-                    .setNegativeButton("Ana Menü") { dialog, which ->
+                    .setNegativeButton("Hayır") { dialog, which ->
                         dialog.dismiss()
                         (context as GameActivity).finish()
                     }
@@ -343,6 +355,18 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
     }
 
+    // Yeni bonus can diyalog metodu
+    private fun showBonusLifeDialog() {
+        (context as GameActivity).runOnUiThread {
+            AlertDialog.Builder(context)
+                .setTitle("Tebrikler!")
+                .setMessage("Seviye ${level}'e ulaştığınız için bir bonus can kazandınız!")
+                .setPositiveButton("Tamam", null)
+                .setCancelable(false)
+                .show()
+        }
+    }
+
     private fun resumeGame() {
         isGameOver = false
         isPlaying = true
@@ -370,7 +394,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     data class Obstacle(var x: Float, var y: Float, var color: Int, var height: Float) {
-        val width = 200f
+        val width = 100f
         val top = y - height / 2
         val bottom = y + height / 2
     }
