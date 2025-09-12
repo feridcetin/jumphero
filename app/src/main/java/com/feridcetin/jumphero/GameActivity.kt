@@ -21,10 +21,8 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var gameView: GameView
     private var rewardedAd: RewardedAd? = null
-    private var interstitialAd: InterstitialAd? = null
-
-    // Reklamın gösterilip gösterilmediğini takip etmek için
-    private var isAdShown = false
+    // InterstitialAd değişkenini artık burada tutmaya gerek yok, Splash'ta yönetiliyor.
+    // private var interstitialAd: InterstitialAd? = null
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase!!))
@@ -36,19 +34,19 @@ class GameActivity : AppCompatActivity() {
 
         MobileAds.initialize(this) {}
         loadRewardedAd()
-        loadInterstitialAd()
+        // Tam ekran reklamı yükleme çağrısı kaldırıldı
+        // loadInterstitialAd()
 
         val frameLayout = findViewById<FrameLayout>(R.id.game_container)
         gameView = GameView(this)
         frameLayout.addView(gameView)
 
-        // Sadece yeni bir oyun seansı ise reklamı göster
-        val isFirstGameSession = intent.getBooleanExtra("isFirstGameSession", false)
-        if (isFirstGameSession) {
-            showInterstitialAd()
-            // Bu ekstra bilgiyi tek kullanımlık hale getir
-            intent.removeExtra("isFirstGameSession")
-        }
+        // Oyun başında reklam gösterme mantığı kaldırıldı
+        // val isFirstGameSession = intent.getBooleanExtra("isFirstGameSession", false)
+        // if (isFirstGameSession) {
+        //    showInterstitialAd()
+        //    intent.removeExtra("isFirstGameSession")
+        // }
     }
 
     override fun onResume() {
@@ -61,54 +59,11 @@ class GameActivity : AppCompatActivity() {
         gameView.pause()
     }
 
-    // Tam ekran reklamı yükler
-    private fun loadInterstitialAd() {
-        if (isAdShown) return // Reklam zaten gösterildiyse tekrar yükleme
+    // Tam ekran reklam yükleme ve gösterme metodları kaldırıldı
+    // private fun loadInterstitialAd() { ... }
+    // private fun showInterstitialAd() { ... }
 
-        val adRequest = AdRequest.Builder().build()
-        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d("AdMob", "Interstitial Ad failed to load: ${adError.message}")
-                interstitialAd = null
-            }
-
-            override fun onAdLoaded(ad: InterstitialAd) {
-                Log.d("AdMob", "Interstitial Ad was loaded.")
-                interstitialAd = ad
-
-                // Reklam yüklendiğinde bir sonraki gösterim için hazır
-                interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d("AdMob", "Interstitial Ad was dismissed.")
-                        interstitialAd = null
-                        isAdShown = true // Reklam gösterildi, bir daha gösterme
-                        loadInterstitialAd()
-                    }
-
-                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        Log.d("AdMob", "Interstitial Ad failed to show.")
-                        interstitialAd = null
-                        isAdShown = true
-                    }
-
-                    override fun onAdShowedFullScreenContent() {
-                        Log.d("AdMob", "Interstitial Ad showed.")
-                    }
-                }
-            }
-        })
-    }
-
-    // Yüklenen reklamı gösterir
-    private fun showInterstitialAd() {
-        if (interstitialAd != null) {
-            interstitialAd?.show(this)
-        } else {
-            Log.d("AdMob", "Interstitial Ad wasn't ready yet.")
-        }
-    }
-
-    // AdMob ödüllü reklamı yükler
+    // AdMob ödüllü reklamı yükler (bu metod hala gerekiyor)
     private fun loadRewardedAd() {
         val adRequest = AdRequest.Builder().build()
         RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
