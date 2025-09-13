@@ -8,12 +8,16 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.Random
+import java.util.concurrent.CopyOnWriteArrayList
 
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
@@ -27,7 +31,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var lives: Int = 3
 
     private var level: Int = 1
-    private val scoreToLevelUp: Int = 20
+    private val scoreToLevelUp: Int = 15
     private var previousScoreForLevel: Int = 0
     private var obstacleSpeed: Float = 10f
 
@@ -43,8 +47,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private val bottomBoundaryPaint = Paint()
 
     private val pauseOverlayPaint = Paint().apply { color = Color.BLACK; alpha = 150 }
-    // pauseTextPaint artık kullanılmıyor
-    // private val pauseTextPaint = Paint().apply { color = Color.WHITE; textSize = 120f; isFakeBoldText = true }
 
     private var characterY: Float = 0f
     private var characterVelocity: Float = 0f
@@ -251,7 +253,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                 canvas.drawColor(Color.BLUE)
             }
 
-
             for (obstacle in obstacles) {
                 obstaclePaint.color = obstacle.color
                 canvas.drawRect(obstacle.x, obstacle.top, obstacle.x + obstacle.width, obstacle.bottom, obstaclePaint)
@@ -294,7 +295,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             if (isPaused) {
                 canvas.drawRect(0f, 0f, screenWidth.toFloat(), screenHeight.toFloat(), pauseOverlayPaint)
 
-                // Play ikonunu tam ekranın ortasında çiz
                 val iconDrawX = screenWidth / 2f - iconSize / 2f
                 val iconDrawY = screenHeight / 2f - iconSize / 2f
                 canvas.drawBitmap(playIconBitmap, iconDrawX, iconDrawY, null)
@@ -361,35 +361,49 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     fun showGameOverDialog() {
         (context as GameActivity).runOnUiThread {
+            val builder = AlertDialog.Builder(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null)
+            builder.setView(dialogView)
+            val dialog = builder.create()
+
+            val dialogTitle = dialogView.findViewById<TextView>(R.id.dialog_title)
+            val dialogMessage = dialogView.findViewById<TextView>(R.id.dialog_message)
+            val positiveButton = dialogView.findViewById<Button>(R.id.positive_button)
+            val negativeButton = dialogView.findViewById<Button>(R.id.negative_button)
+
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
             if (lives <= 0) {
-                AlertDialog.Builder(context)
-                    .setTitle("Oyun Bitti!")
-                    .setMessage("Skorunuz: $score\n\nÖdüllü reklam izleyerek ekstra bir can kazanmak ister misin?")
-                    .setPositiveButton("Evet") { dialog, which ->
-                        dialog.dismiss()
-                        (context as GameActivity).showRewardedAd()
-                    }
-                    .setNegativeButton("Hayır") { dialog, which ->
-                        dialog.dismiss()
-                        (context as GameActivity).finish()
-                    }
-                    .setCancelable(false)
-                    .show()
+                dialogTitle.text = context.getString(R.string.game_over_title)
+                dialogMessage.text = context.getString(R.string.game_over_message, score)
+                positiveButton.text = context.getString(R.string.yes_button)
+                negativeButton.text = context.getString(R.string.no_button)
+
+                positiveButton.setOnClickListener {
+                    dialog.dismiss()
+                    (context as GameActivity).showRewardedAd()
+                }
+                negativeButton.setOnClickListener {
+                    dialog.dismiss()
+                    (context as GameActivity).finish()
+                }
             } else {
-                AlertDialog.Builder(context)
-                    .setTitle("Oyun Bitti!")
-                    .setMessage("Skorunuz: $score")
-                    .setPositiveButton("Yeniden Başla") { dialog, which ->
-                        dialog.dismiss()
-                        resetGame()
-                    }
-                    .setNegativeButton("Ana Menü") { dialog, which ->
-                        dialog.dismiss()
-                        (context as GameActivity).finish()
-                    }
-                    .setCancelable(false)
-                    .show()
+                dialogTitle.text = context.getString(R.string.game_over_title)
+                dialogMessage.text = context.getString(R.string.game_over_message, score)
+                positiveButton.text = context.getString(R.string.restart_button)
+                negativeButton.text = context.getString(R.string.main_menu_button)
+
+                positiveButton.setOnClickListener {
+                    dialog.dismiss()
+                    resetGame()
+                }
+                negativeButton.setOnClickListener {
+                    dialog.dismiss()
+                    (context as GameActivity).finish()
+                }
             }
+            dialog.setCancelable(false)
+            dialog.show()
         }
     }
 
@@ -401,26 +415,61 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     private fun showResumeDialog() {
         (context as GameActivity).runOnUiThread {
-            AlertDialog.Builder(context)
-                .setTitle("Tebrikler!")
-                .setMessage("Reklam izlendi, can hakkınız arttı. Oyuna devam etmek için Tamam'a basın.")
-                .setPositiveButton("Tamam") { dialog, which ->
-                    dialog.dismiss()
-                    setPaused(false)
-                }
-                .setCancelable(false)
-                .show()
+            val builder = AlertDialog.Builder(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null)
+            builder.setView(dialogView)
+            val dialog = builder.create()
+
+            val dialogTitle = dialogView.findViewById<TextView>(R.id.dialog_title)
+            val dialogMessage = dialogView.findViewById<TextView>(R.id.dialog_message)
+            val positiveButton = dialogView.findViewById<Button>(R.id.positive_button)
+            val negativeButton = dialogView.findViewById<Button>(R.id.negative_button)
+
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            dialogTitle.text = context.getString(R.string.congratulations_title)
+            dialogMessage.text = context.getString(R.string.congratulations_message)
+            positiveButton.text = context.getString(R.string.ok_button)
+            negativeButton.visibility = View.GONE
+
+            positiveButton.setOnClickListener {
+                dialog.dismiss()
+                resetCharacterAndObstacles() // BU SATIR EKLENDİ!
+                isGameOver = false
+                setPaused(false)
+                resume()
+            }
+
+            dialog.setCancelable(false)
+            dialog.show()
         }
     }
 
     private fun showBonusLifeDialog() {
         (context as GameActivity).runOnUiThread {
-            AlertDialog.Builder(context)
-                .setTitle("Tebrikler!")
-                .setMessage("Seviye ${level}'e ulaştığınız için bir bonus can kazandınız!")
-                .setPositiveButton("Tamam", null)
-                .setCancelable(false)
-                .show()
+            val builder = AlertDialog.Builder(context)
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_custom, null)
+            builder.setView(dialogView)
+            val dialog = builder.create()
+
+            val dialogTitle = dialogView.findViewById<TextView>(R.id.dialog_title)
+            val dialogMessage = dialogView.findViewById<TextView>(R.id.dialog_message)
+            val positiveButton = dialogView.findViewById<Button>(R.id.positive_button)
+            val negativeButton = dialogView.findViewById<Button>(R.id.negative_button)
+
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            dialogTitle.text = context.getString(R.string.congratulations_title)
+            dialogMessage.text = context.getString(R.string.bonus_life_message, level)
+            positiveButton.text = context.getString(R.string.ok_button)
+            negativeButton.visibility = View.GONE
+
+            positiveButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.setCancelable(false)
+            dialog.show()
         }
     }
 

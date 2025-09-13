@@ -16,4 +16,15 @@
     <string name="buy_advanced_theme">Buy Advanced Theme</string>
     <string name="other_settings_text">Other Settings Will Come Here</string>
     <string name="exit_button">Exit</string>
+    <string name="game_over_title">Game Over!</string>
+    <string name="game_over_message">Your score: %d\n\nDo you want to get an extra life by watching a rewarded ad?</string>
+    <string name="yes_button">Yes</string>
+    <string name="no_button">No</string>
+    <string name="restart_button">Restart</string>
+    <string name="main_menu_button">Main Menu</string>
+    <string name="congratulations_title">Congratulations!</string>
+    <string name="congratulations_message">The ad has been watched, your life has increased. Press OK to continue the game.</string>
+    <string name="ok_button">OK</string>
+    <string name="bonus_life_message">You have gained a bonus life for reaching level %d!</string>
+
 </resources>
