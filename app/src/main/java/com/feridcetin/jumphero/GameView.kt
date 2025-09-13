@@ -34,6 +34,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private val scoreToLevelUp: Int = 15
     private var previousScoreForLevel: Int = 0
     private var obstacleSpeed: Float = 10f
+    private var savedObstacleSpeed: Float = 10f // Oyun hızını saklamak için yeni değişken
 
     private var isPaused = false
     private var isBonusLifeGiven: Boolean = false
@@ -381,6 +382,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
                 positiveButton.setOnClickListener {
                     dialog.dismiss()
+                    savedObstacleSpeed = obstacleSpeed // Mevcut hızı kaydet
                     (context as GameActivity).showRewardedAd()
                 }
                 negativeButton.setOnClickListener {
@@ -434,7 +436,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
             positiveButton.setOnClickListener {
                 dialog.dismiss()
-                resetCharacterAndObstacles() // BU SATIR EKLENDİ!
+                obstacleSpeed = savedObstacleSpeed // Kaydedilmiş hızı geri yükle
+                resetCharacterAndObstacles()
                 isGameOver = false
                 setPaused(false)
                 resume()

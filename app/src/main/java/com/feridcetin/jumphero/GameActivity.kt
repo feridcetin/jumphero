@@ -16,7 +16,7 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var gameView: GameView
     private var rewardedAd: RewardedAd? = null
-    private val adUnitId = "ca-app-pub-3940256099942544/5224354917" // TEST REKLAM BİRİMİ
+    private val adUnitId = "ca-app-pub-2120666198065087/7475733865" // TEST REKLAM BİRİMİ
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

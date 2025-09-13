@@ -44,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun loadInterstitialAd() {
         val adRequest = AdRequest.Builder().build()
-        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
+        InterstitialAd.load(this, "ca-app-pub-2120666198065087/5385042550", adRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.d("AdMob", "Splash Interstitial Ad failed to load: ${adError.message}")
                 interstitialAd = null
