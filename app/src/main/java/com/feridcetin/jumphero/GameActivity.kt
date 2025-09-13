@@ -1,52 +1,48 @@
 package com.feridcetin.jumphero
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import android.content.Context
-import android.content.res.Configuration
 
 class GameActivity : AppCompatActivity() {
 
     private lateinit var gameView: GameView
     private var rewardedAd: RewardedAd? = null
-    // InterstitialAd değişkenini artık burada tutmaya gerek yok, Splash'ta yönetiliyor.
-    // private var interstitialAd: InterstitialAd? = null
-
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(LocaleHelper.onAttach(newBase!!))
-    }
+    private val adUnitId = "ca-app-pub-3940256099942544/5224354917" // TEST REKLAM BİRİMİ
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
 
+        // GameView'i oluştur ve içeriğin kökü olarak ayarla
+        gameView = GameView(this)
+        setContentView(gameView)
+
+        // AdMob'u başlat ve reklamı yükle
         MobileAds.initialize(this) {}
         loadRewardedAd()
-        // Tam ekran reklamı yükleme çağrısı kaldırıldı
-        // loadInterstitialAd()
 
-        val frameLayout = findViewById<FrameLayout>(R.id.game_container)
-        gameView = GameView(this)
-        frameLayout.addView(gameView)
-
-        // Oyun başında reklam gösterme mantığı kaldırıldı
-        // val isFirstGameSession = intent.getBooleanExtra("isFirstGameSession", false)
-        // if (isFirstGameSession) {
-        //    showInterstitialAd()
-        //    intent.removeExtra("isFirstGameSession")
-        // }
+        // Yeni OnBackPressedDispatcher yapısı
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Eğer oyun duraklatılmamışsa, duraklat
+                if (!gameView.getPaused()) {
+                    gameView.setPaused(true)
+                } else {
+                    // Oyun duraklatılmışsa, varsayılan geri tuşu davranışını etkinleştir ve çıkış yap
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     override fun onResume() {
@@ -59,52 +55,45 @@ class GameActivity : AppCompatActivity() {
         gameView.pause()
     }
 
-    // Tam ekran reklam yükleme ve gösterme metodları kaldırıldı
-    // private fun loadInterstitialAd() { ... }
-    // private fun showInterstitialAd() { ... }
-
-    // AdMob ödüllü reklamı yükler (bu metod hala gerekiyor)
+    // Ödüllü reklamı yükleme metodu
     private fun loadRewardedAd() {
         val adRequest = AdRequest.Builder().build()
-        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+        RewardedAd.load(this, adUnitId, adRequest, object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.d("AdMob", "Rewarded Ad failed to load: ${adError.message}")
                 rewardedAd = null
             }
 
             override fun onAdLoaded(ad: RewardedAd) {
-                Log.d("AdMob", "Rewarded Ad was loaded.")
                 rewardedAd = ad
-                rewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d("AdMob", "Ad was dismissed.")
-                        rewardedAd = null
-                        loadRewardedAd()
-                    }
-
-                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        Log.d("AdMob", "Ad failed to show.")
-                        rewardedAd = null
-                    }
-
-                    override fun onAdShowedFullScreenContent() {
-                        Log.d("AdMob", "Ad showed.")
-                    }
-                }
             }
         })
     }
 
-    // `GameView` tarafından çağrılacak, reklamı gösterme metodu
+    // Reklamı gösterme metodu
     fun showRewardedAd() {
-        if (rewardedAd != null) {
-            rewardedAd?.show(this) { rewardItem ->
-                Log.d("AdMob", "User earned ${rewardItem.amount} ${rewardItem.type}")
+        rewardedAd?.let { ad ->
+            ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    // Kullanıcı reklamı kapattığında yeni reklamı yükle
+                    loadRewardedAd()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    rewardedAd = null
+                }
+
+                override fun onAdShowedFullScreenContent() {
+                    // Oyun duraklatılmışsa devam etmesini sağla
+                    if (gameView.getPaused()) {
+                        gameView.setPaused(false)
+                    }
+                }
+            }
+            // Reklamı göster ve ödülü ver
+            ad.show(this) { rewardItem ->
+                // Ödül verildiğinde GameView içindeki metodu çağır
                 gameView.grantLifeAndShowResumeDialog()
             }
-        } else {
-            Log.d("AdMob", "Rewarded ad wasn't ready yet.")
-            gameView.showGameOverDialog()
         }
     }
 }

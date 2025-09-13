@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.Log
@@ -32,17 +31,20 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var previousScoreForLevel: Int = 0
     private var obstacleSpeed: Float = 10f
 
-    // Bonus can için yeni değişken
+    private var isPaused = false
     private var isBonusLifeGiven: Boolean = false
 
-    // Engel yüksekliği değişkenleri
-    private val baseObstacleHeight: Float = 200f // Temel engel boyu
-    private val heightIncreasePerLevel: Float = 20f // Her seviyede artacak boy
+    private val baseObstacleHeight: Float = 200f
+    private val heightIncreasePerLevel: Float = 20f
 
     private val obstaclePaint = Paint()
-    private val scorePaint = Paint()
+    private val scoreTextPaint = Paint()
+    private val levelTextPaint = Paint()
     private val bottomBoundaryPaint = Paint()
-    private val levelPaint = Paint()
+
+    private val pauseOverlayPaint = Paint().apply { color = Color.BLACK; alpha = 150 }
+    // pauseTextPaint artık kullanılmıyor
+    // private val pauseTextPaint = Paint().apply { color = Color.WHITE; textSize = 120f; isFakeBoldText = true }
 
     private var characterY: Float = 0f
     private var characterVelocity: Float = 0f
@@ -67,6 +69,14 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var backgroundX1: Float = 0f
     private var backgroundX2: Float = 0f
 
+    private lateinit var pauseIconBitmap: Bitmap
+    private lateinit var playIconBitmap: Bitmap
+    private val iconSize = 150
+
+    private lateinit var scoreIconBitmap: Bitmap
+    private lateinit var levelIconBitmap: Bitmap
+    private val uiIconSize = 80f
+
     init {
         holder.addCallback(this)
 
@@ -78,17 +88,33 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         characterBitmap = BitmapFactory.decodeResource(resources, characterResId)
         characterBitmap = Bitmap.createScaledBitmap(characterBitmap, characterSize.toInt(), characterSize.toInt(), true)
 
-        backgroundBitmapOriginal = BitmapFactory.decodeResource(resources, R.drawable.background)
+        try {
+            backgroundBitmapOriginal = BitmapFactory.decodeResource(resources, R.drawable.background)
+        } catch (e: Exception) {
+            Log.e("GameView", "Arka plan resmi yüklenemedi: background.png dosyasını kontrol edin.", e)
+        }
 
-        scorePaint.color = Color.parseColor("#FFD700")
+        scoreTextPaint.color = Color.parseColor("#FFD700")
+        scoreTextPaint.textSize = 80f
+        scoreTextPaint.isFakeBoldText = true
+
+        levelTextPaint.color = Color.WHITE
+        levelTextPaint.textSize = 80f
+        levelTextPaint.isFakeBoldText = true
+
         bottomBoundaryPaint.color = Color.parseColor("#FFD700")
 
-        scorePaint.textSize = 80f
-        scorePaint.isFakeBoldText = true
+        val originalPauseIcon = BitmapFactory.decodeResource(resources, R.drawable.pause_icon24x24)
+        pauseIconBitmap = Bitmap.createScaledBitmap(originalPauseIcon, iconSize, iconSize, true)
 
-        levelPaint.color = Color.WHITE
-        levelPaint.textSize = 80f
-        levelPaint.isFakeBoldText = true
+        val originalPlayIcon = BitmapFactory.decodeResource(resources, R.drawable.play_icon256x256)
+        playIconBitmap = Bitmap.createScaledBitmap(originalPlayIcon, iconSize, iconSize, true)
+
+        val originalScoreIcon = BitmapFactory.decodeResource(resources, R.drawable.scor_icon24x24)
+        scoreIconBitmap = Bitmap.createScaledBitmap(originalScoreIcon, uiIconSize.toInt(), uiIconSize.toInt(), true)
+
+        val originalLevelIcon = BitmapFactory.decodeResource(resources, R.drawable.level_icon24x24)
+        levelIconBitmap = Bitmap.createScaledBitmap(originalLevelIcon, uiIconSize.toInt(), uiIconSize.toInt(), true)
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -101,11 +127,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         characterY = (screenHeight / 2).toFloat()
         createInitialObstacles()
 
-        val aspectRatio = backgroundBitmapOriginal.width.toFloat() / backgroundBitmapOriginal.height.toFloat()
-        val scaledWidth = (screenHeight * aspectRatio).toInt()
-        backgroundBitmapScaled = Bitmap.createScaledBitmap(backgroundBitmapOriginal, scaledWidth, screenHeight, true)
-
-        backgroundX2 = backgroundBitmapScaled.width.toFloat()
+        if (::backgroundBitmapOriginal.isInitialized) {
+            val aspectRatio = backgroundBitmapOriginal.width.toFloat() / backgroundBitmapOriginal.height.toFloat()
+            val scaledWidth = (screenHeight * aspectRatio).toInt()
+            backgroundBitmapScaled = Bitmap.createScaledBitmap(backgroundBitmapOriginal, scaledWidth, screenHeight, true)
+            backgroundX2 = backgroundBitmapScaled.width.toFloat()
+        }
 
         isReady = true
         if (!isPlaying) {
@@ -125,7 +152,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     override fun run() {
         while (isPlaying) {
-            update()
+            if (!isPaused) {
+                update()
+            }
             draw()
             try {
                 Thread.sleep(16)
@@ -142,11 +171,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         backgroundX1 -= backgroundScrollSpeed
         backgroundX2 -= backgroundScrollSpeed
 
-        if (backgroundX1 < -backgroundBitmapScaled.width) {
-            backgroundX1 = backgroundX2 + backgroundBitmapScaled.width
-        }
-        if (backgroundX2 < -backgroundBitmapScaled.width) {
-            backgroundX2 = backgroundX1 + backgroundBitmapScaled.width
+        if (::backgroundBitmapScaled.isInitialized) {
+            if (backgroundX1 < -backgroundBitmapScaled.width) {
+                backgroundX1 = backgroundX2 + backgroundBitmapScaled.width
+            }
+            if (backgroundX2 < -backgroundBitmapScaled.width) {
+                backgroundX2 = backgroundX1 + backgroundBitmapScaled.width
+            }
         }
 
         characterVelocity += gravity
@@ -192,21 +223,18 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                 addNewObstacle()
                 score++
 
-                // Seviye atlama kontrolü
                 if (score > previousScoreForLevel && score % scoreToLevelUp == 0) {
                     level++
                     previousScoreForLevel = score
                     obstacleSpeed += 1f
-                    isBonusLifeGiven = false // Yeni seviyede bonus can hakkını sıfırla
+                    isBonusLifeGiven = false
                 }
             }
         }
 
-        // Seviye 3 ve katlarında can ekleme
         if (level > 0 && level % 3 == 0 && !isBonusLifeGiven) {
             lives++
-            isBonusLifeGiven = true // Canı verdikten sonra true yap ki tekrar verilmesin
-            //showBonusLifeDialog()
+            isBonusLifeGiven = true
         }
     }
 
@@ -216,8 +244,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         if (holder.surface.isValid) {
             val canvas = holder.lockCanvas()
 
-            canvas.drawBitmap(backgroundBitmapScaled, backgroundX1, 0f, null)
-            canvas.drawBitmap(backgroundBitmapScaled, backgroundX2, 0f, null)
+            if (::backgroundBitmapScaled.isInitialized) {
+                canvas.drawBitmap(backgroundBitmapScaled, backgroundX1, 0f, null)
+                canvas.drawBitmap(backgroundBitmapScaled, backgroundX2, 0f, null)
+            } else {
+                canvas.drawColor(Color.BLUE)
+            }
+
 
             for (obstacle in obstacles) {
                 obstaclePaint.color = obstacle.color
@@ -237,24 +270,49 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             val charDrawY = characterY - characterSize / 2
             canvas.drawBitmap(characterBitmap, charDrawX, charDrawY, null)
 
-            val scoreText = "Skor: $score"
-            val scoreTextWidth = scorePaint.measureText(scoreText)
-            canvas.drawText(scoreText, screenWidth.toFloat() - scoreTextWidth - 50f, 100f, scorePaint)
+            val scoreIconRight = screenWidth.toFloat() - 20f
+            val scoreIconLeft = scoreIconRight - uiIconSize
+            val scoreIconTop = 30f
+            canvas.drawBitmap(scoreIconBitmap, scoreIconLeft, scoreIconTop, null)
 
-            val levelText = "Seviye: $level"
-            val levelTextWidth = levelPaint.measureText(levelText)
-            canvas.drawText(levelText, screenWidth.toFloat() - levelTextWidth - 50f, 200f, levelPaint)
+            val scoreText = "$score"
+            val scoreTextWidth = scoreTextPaint.measureText(scoreText)
+            canvas.drawText(scoreText, scoreIconLeft - scoreTextWidth - 10f, scoreIconTop + uiIconSize / 2 + scoreTextPaint.textSize / 3, scoreTextPaint)
+
+            val levelIconRight = screenWidth.toFloat() - 20f
+            val levelIconLeft = levelIconRight - uiIconSize
+            val levelIconTop = 130f
+            canvas.drawBitmap(levelIconBitmap, levelIconLeft, levelIconTop, null)
+
+            val levelText = "$level"
+            val levelTextWidth = levelTextPaint.measureText(levelText)
+            canvas.drawText(levelText, levelIconLeft - levelTextWidth - 10f, levelIconTop + uiIconSize / 2 + levelTextPaint.textSize / 3, levelTextPaint)
 
             canvas.drawRect(0f, screenHeight.toFloat() - 20f, screenWidth.toFloat(), screenHeight.toFloat(), bottomBoundaryPaint)
             canvas.drawRect(0f, 0f, screenWidth.toFloat(), 20f, bottomBoundaryPaint)
+
+            if (isPaused) {
+                canvas.drawRect(0f, 0f, screenWidth.toFloat(), screenHeight.toFloat(), pauseOverlayPaint)
+
+                // Play ikonunu tam ekranın ortasında çiz
+                val iconDrawX = screenWidth / 2f - iconSize / 2f
+                val iconDrawY = screenHeight / 2f - iconSize / 2f
+                canvas.drawBitmap(playIconBitmap, iconDrawX, iconDrawY, null)
+            }
 
             holder.unlockCanvasAndPost(canvas)
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN && !isGameOver) {
-            characterVelocity = jumpPower
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (isPaused) {
+                setPaused(false)
+                return true
+            }
+            else if (!isGameOver) {
+                characterVelocity = jumpPower
+            }
         }
         return true
     }
@@ -348,14 +406,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                 .setMessage("Reklam izlendi, can hakkınız arttı. Oyuna devam etmek için Tamam'a basın.")
                 .setPositiveButton("Tamam") { dialog, which ->
                     dialog.dismiss()
-                    resumeGame()
+                    setPaused(false)
                 }
                 .setCancelable(false)
                 .show()
         }
     }
 
-    // Yeni bonus can diyalog metodu
     private fun showBonusLifeDialog() {
         (context as GameActivity).runOnUiThread {
             AlertDialog.Builder(context)
@@ -365,15 +422,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                 .setCancelable(false)
                 .show()
         }
-    }
-
-    private fun resumeGame() {
-        isGameOver = false
-        isPlaying = true
-        resetCharacterAndObstacles()
-        thread = Thread(this)
-        thread?.start()
-        isReady = true
     }
 
     private fun resetGame() {
@@ -391,6 +439,14 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         thread = Thread(this)
         thread?.start()
         isReady = true
+    }
+
+    fun setPaused(paused: Boolean) {
+        isPaused = paused
+    }
+
+    fun getPaused(): Boolean {
+        return isPaused
     }
 
     data class Obstacle(var x: Float, var y: Float, var color: Int, var height: Float) {
