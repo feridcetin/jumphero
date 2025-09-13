@@ -1,82 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center_horizontal"
     android:background="#202020"
+    android:fillViewport="true"
     tools:context=".SettingActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_button"
-        android:textSize="32sp"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="32dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/language"
-        android:textSize="20sp"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="16dp"/>
-
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="32dp">
+        android:orientation="vertical"
+        android:paddingTop="32dp"
+        android:paddingBottom="120dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/btn_lang_en"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="English"
-            android:layout_marginEnd="16dp"/>
+            android:text="@string/settings_button"
+            android:textSize="32sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="32dp"/>
 
-        <Button
-            android:id="@+id/btn_lang_tr"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Türkçe"/>
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="32dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Premium Karakter"
-        android:textSize="20sp"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="8dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="16dp"/>
 
-    <Switch
-        android:id="@+id/switch_premium_character"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Aktif Et"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:layout_marginBottom="32dp"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Gelişmiş Tema"
-        android:textSize="20sp"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="8dp"/>
+                <Button
+                    android:id="@+id/btn_lang_en"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="English"
+                    android:layout_marginEnd="16dp"/>
 
-    <Switch
-        android:id="@+id/switch_advanced_theme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Aktif Et"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"/>
+                <Button
+                    android:id="@+id/btn_lang_tr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Türkçe"/>
+            </LinearLayout>
 
-</LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/premium_character"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="16dp"/>
+
+            <Switch
+                android:id="@+id/switch_premium_character"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activate_switch"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/advanced_theme"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="16dp"/>
+
+            <Switch
+                android:id="@+id/switch_advanced_theme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activate_switch"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/character_selection"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="32dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnRed"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_red"
+                    android:contentDescription="Red Character"
+                    android:layout_margin="8dp" />
+
+                <ImageButton
+                    android:id="@+id/btnBlue"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_blue"
+                    android:contentDescription="Blue Character"
+                    android:layout_margin="8dp" />
+
+                <ImageButton
+                    android:id="@+id/btnGreen"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_green"
+                    android:contentDescription="Green Character"
+                    android:layout_margin="8dp" />
+                <!--
+                                <ImageButton
+                                    android:id="@+id/btnYellow"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:background="@drawable/rounded_button_yellow"
+                                    android:contentDescription="Yellow Character"
+                                    android:layout_margin="8dp" />
+                -->
+                            </LinearLayout>
+                            <!--
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal">
+
+                                            <ImageButton
+                                                android:id="@+id/btnCyan"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:background="@drawable/rounded_button_cyan"
+                                                android:contentDescription="Cyan Character"
+                                                android:layout_margin="8dp" />
+
+                                            <ImageButton
+                                                android:id="@+id/btnMagenta"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:background="@drawable/rounded_button_magenta"
+                                                android:contentDescription="Magenta Character"
+                                                android:layout_margin="8dp" />
+
+                                            <ImageButton
+                                                android:id="@+id/btnOrange"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:background="@drawable/rounded_button_orange"
+                                                android:contentDescription="Orange Character"
+                                                android:layout_margin="8dp" />
+
+                                            <ImageButton
+                                                android:id="@+id/btnPurple"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:background="@drawable/rounded_button_purple"
+                                                android:contentDescription="Purple Character"
+                                                android:layout_margin="8dp" />
+
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal">
+
+                                            <ImageButton
+                                                android:id="@+id/btnLime"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:background="@drawable/rounded_button_lime"
+                                                android:contentDescription="Lime Character"
+                                                android:layout_margin="8dp" />
+
+                                            <ImageButton
+                                                android:id="@+id/btnPink"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:background="@drawable/rounded_button_pink"
+                                                android:contentDescription="Pink Character"
+                                                android:layout_margin="8dp" />
+
+                                            <ImageButton
+                                                android:id="@+id/btnBrown"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:background="@drawable/rounded_button_brown"
+                                                android:contentDescription="Brown Character"
+                                                android:layout_margin="8dp" />
+
+                                            <ImageButton
+                                                android:id="@+id/btnTeal"
+                                                android:layout_width="60dp"
+                                                android:layout_height="60dp"
+                                                android:background="@drawable/rounded_button_teal"
+                                                android:contentDescription="Teal Character"
+                                                android:layout_margin="8dp" />
+
+                                        </LinearLayout>
+                -->
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnSaveCharacter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save_ad_button"
+                        android:padding="12dp"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </ScrollView>

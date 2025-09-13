@@ -26,5 +26,10 @@
     <string name="congratulations_message">The ad has been watched, your life has increased. Press OK to continue the game.</string>
     <string name="ok_button">OK</string>
     <string name="bonus_life_message">You have gained a bonus life for reaching level %d!</string>
+    <string name="premium_character">Premium Character</string>
+    <string name="activate_switch">Activate</string>
+    <string name="advanced_theme">Advanced Theme</string>
+    <string name="character_selection">Character Selection</string>
+    <string name="save_ad_button">Save (Watch Ad)</string>
 
 </resources>

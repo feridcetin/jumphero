@@ -26,5 +26,10 @@
     <string name="congratulations_message">Reklam izlendi, can hakkınız arttı. Oyuna devam etmek için Tamam\'a basın.</string>
     <string name="ok_button">Tamam</string>
     <string name="bonus_life_message">Seviye %d\'e ulaştığınız için bir bonus can kazandınız!</string>
+    <string name="premium_character">Premium Karakter</string>
+    <string name="activate_switch">Aktif Et</string>
+    <string name="advanced_theme">Gelişmiş Tema</string>
+    <string name="character_selection">Karakter Seçimi</string>
+    <string name="save_ad_button">Kaydet (Reklam İzle)</string>
 
 </resources>

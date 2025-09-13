@@ -87,7 +87,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         val hasCharactersPack = sharedPref.getBoolean("hasCharactersPack", false)
         val hasAdvancedTheme = sharedPref.getBoolean("hasAdvancedTheme", false)
 
-        val characterResId = if (hasCharactersPack) R.drawable.character_premium else R.drawable.character_default
+
+        val selectedCharacterColor = sharedPref.getInt("selected_character_color", R.drawable.character_default)
+
+        //Log.e("GameView", "selected_character_color= ${selectedCharacterColor}")
+
+        val characterResId = if (hasCharactersPack) R.drawable.character_premium else selectedCharacterColor
+        //val characterResId = if (hasCharactersPack) R.drawable.character_premium else R.drawable.character_default
         characterBitmap = BitmapFactory.decodeResource(resources, characterResId)
         characterBitmap = Bitmap.createScaledBitmap(characterBitmap, characterSize.toInt(), characterSize.toInt(), true)
 
