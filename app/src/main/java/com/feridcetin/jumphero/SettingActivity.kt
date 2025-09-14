@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Switch
@@ -47,13 +48,13 @@ class SettingActivity : AppCompatActivity() {
         characterButtons = listOf(
             findViewById(R.id.btnRed),
             findViewById(R.id.btnBlue),
-            findViewById(R.id.btnGreen)/*,
+            findViewById(R.id.btnGreen),
             findViewById(R.id.btnYellow),
-            findViewById(R.id.btnCyan),
-            findViewById(R.id.btnMagenta),
             findViewById(R.id.btnOrange),
-            findViewById(R.id.btnPurple),
-            findViewById(R.id.btnLime),
+            findViewById(R.id.btnPink),
+            findViewById(R.id.btnTurquoise),
+            findViewById(R.id.btnWhite),
+            findViewById(R.id.btnBlack)/*,
             findViewById(R.id.btnPink),
             findViewById(R.id.btnBrown),
             findViewById(R.id.btnTeal)*/
@@ -64,10 +65,12 @@ class SettingActivity : AppCompatActivity() {
         // Dil butonu tıklama olayları
         btnLangEn.setOnClickListener {
             saveStringSetting("language", "en")
+            LocaleHelper.setLocaleAndRestart(this, "en")
             updateLanguageButtons()
         }
         btnLangTr.setOnClickListener {
             saveStringSetting("language", "tr")
+            LocaleHelper.setLocaleAndRestart(this, "tr")
             updateLanguageButtons()
         }
 
@@ -86,13 +89,13 @@ class SettingActivity : AppCompatActivity() {
                     R.id.btnRed -> selectedCharacterColor = R.drawable.rounded_button_red
                     R.id.btnBlue -> selectedCharacterColor = R.drawable.rounded_button_blue
                     R.id.btnGreen -> selectedCharacterColor = R.drawable.rounded_button_green
-                  /*  R.id.btnYellow -> selectedCharacterColor = Color.YELLOW
-                    R.id.btnCyan -> selectedCharacterColor = Color.CYAN
-                    R.id.btnMagenta -> selectedCharacterColor = Color.MAGENTA
-                    R.id.btnOrange -> selectedCharacterColor = Color.parseColor("#FFA500") // Orange
-                    R.id.btnPurple -> selectedCharacterColor = Color.parseColor("#800080") // Purple
-                    R.id.btnLime -> selectedCharacterColor = Color.parseColor("#00FF00") // Lime (Bright Green)
-                    R.id.btnPink -> selectedCharacterColor = Color.parseColor("#FFC0CB") // Pink
+                    R.id.btnYellow -> selectedCharacterColor = R.drawable.rounded_button_yellow
+                    R.id.btnOrange -> selectedCharacterColor = R.drawable.rounded_button_orange
+                    R.id.btnPink -> selectedCharacterColor = R.drawable.rounded_button_pink
+                    R.id.btnTurquoise -> selectedCharacterColor = R.drawable.rounded_button_turquoise
+                    R.id.btnWhite -> selectedCharacterColor = R.drawable.rounded_button_white
+                    R.id.btnBlack -> selectedCharacterColor = R.drawable.rounded_button_black
+                 /*     R.id.btnPink -> selectedCharacterColor = Color.parseColor("#FFC0CB") // Pink
                     R.id.btnBrown -> selectedCharacterColor = Color.parseColor("#A52A2A") // Brown
                     R.id.btnTeal -> selectedCharacterColor = Color.parseColor("#008080") // Teal*/
                 }
@@ -127,13 +130,13 @@ class SettingActivity : AppCompatActivity() {
                 R.id.btnRed -> if (selectedCharacterColor == R.drawable.rounded_button_red) button.elevation = 10f
                 R.id.btnBlue -> if (selectedCharacterColor ==R.drawable.rounded_button_blue) button.elevation = 10f
                 R.id.btnGreen -> if (selectedCharacterColor == R.drawable.rounded_button_green) button.elevation = 10f
-             /*   R.id.btnYellow -> if (selectedCharacterColor == Color.YELLOW) button.elevation = 10f
-                R.id.btnCyan -> if (selectedCharacterColor == Color.CYAN) button.elevation = 10f
-                R.id.btnMagenta -> if (selectedCharacterColor == Color.MAGENTA) button.elevation = 10f
-                R.id.btnOrange -> if (selectedCharacterColor == Color.parseColor("#FFA500")) button.elevation = 10f
-                R.id.btnPurple -> if (selectedCharacterColor == Color.parseColor("#800080")) button.elevation = 10f
-                R.id.btnLime -> if (selectedCharacterColor == Color.parseColor("#00FF00")) button.elevation = 10f
-                R.id.btnPink -> if (selectedCharacterColor == Color.parseColor("#FFC0CB")) button.elevation = 10f
+                R.id.btnYellow -> if (selectedCharacterColor == R.drawable.rounded_button_yellow) button.elevation = 10f
+                R.id.btnOrange -> if (selectedCharacterColor == R.drawable.rounded_button_orange) button.elevation = 10f
+                R.id.btnPink -> if (selectedCharacterColor == R.drawable.rounded_button_pink) button.elevation = 10f
+                R.id.btnTurquoise -> if (selectedCharacterColor ==  R.drawable.rounded_button_turquoise) button.elevation = 10f
+                R.id.btnWhite -> if (selectedCharacterColor == R.drawable.rounded_button_white) button.elevation = 10f
+                R.id.btnBlack -> if (selectedCharacterColor == R.drawable.rounded_button_black) button.elevation = 10f
+              /*    R.id.btnPink -> if (selectedCharacterColor == Color.parseColor("#FFC0CB")) button.elevation = 10f
                 R.id.btnBrown -> if (selectedCharacterColor == Color.parseColor("#A52A2A")) button.elevation = 10f
                 R.id.btnTeal -> if (selectedCharacterColor == Color.parseColor("#008080")) button.elevation = 10f*/
             }
@@ -156,7 +159,7 @@ class SettingActivity : AppCompatActivity() {
 
     private fun loadRewardedAd() {
         val adRequest = AdRequest.Builder().build()
-        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917", adRequest, object : RewardedAdLoadCallback() {
+        RewardedAd.load(this, "ca-app-pub-2120666198065087/7475733865", adRequest, object : RewardedAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 mRewardedAd = null
             }
@@ -183,5 +186,9 @@ class SettingActivity : AppCompatActivity() {
             putInt("selected_character_color", selectedCharacterColor)
             apply()
         }
+
+        val selectedCharacterColor_Log = sharedPref.getInt("selected_character_color", R.drawable.character_default)
+
+        //Log.e("SettingActivity", "selected_character_color_Log= ${selectedCharacterColor_Log}, selectedCharacterColor= ${selectedCharacterColor}")
     }
 }

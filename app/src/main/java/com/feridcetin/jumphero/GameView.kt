@@ -90,7 +90,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
         val selectedCharacterColor = sharedPref.getInt("selected_character_color", R.drawable.character_default)
 
-        //Log.e("GameView", "selected_character_color= ${selectedCharacterColor}")
+       //Log.e("GameView", "selected_character_color= ${selectedCharacterColor}")
 
         val characterResId = if (hasCharactersPack) R.drawable.character_premium else selectedCharacterColor
         //val characterResId = if (hasCharactersPack) R.drawable.character_premium else R.drawable.character_default

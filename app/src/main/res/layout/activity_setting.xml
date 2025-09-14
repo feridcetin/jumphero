@@ -155,95 +155,95 @@
                     android:background="@drawable/rounded_button_green"
                     android:contentDescription="Green Character"
                     android:layout_margin="8dp" />
-                <!--
-                                <ImageButton
-                                    android:id="@+id/btnYellow"
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
-                                    android:background="@drawable/rounded_button_yellow"
-                                    android:contentDescription="Yellow Character"
-                                    android:layout_margin="8dp" />
-                -->
-                            </LinearLayout>
-                            <!--
-                                        <LinearLayout
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:orientation="horizontal">
 
-                                            <ImageButton
-                                                android:id="@+id/btnCyan"
-                                                android:layout_width="60dp"
-                                                android:layout_height="60dp"
-                                                android:background="@drawable/rounded_button_cyan"
-                                                android:contentDescription="Cyan Character"
-                                                android:layout_margin="8dp" />
+                <ImageButton
+                    android:id="@+id/btnYellow"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_yellow"
+                    android:contentDescription="Yellow Character"
+                    android:layout_margin="8dp" />
 
-                                            <ImageButton
-                                                android:id="@+id/btnMagenta"
-                                                android:layout_width="60dp"
-                                                android:layout_height="60dp"
-                                                android:background="@drawable/rounded_button_magenta"
-                                                android:contentDescription="Magenta Character"
-                                                android:layout_margin="8dp" />
+            </LinearLayout>
 
-                                            <ImageButton
-                                                android:id="@+id/btnOrange"
-                                                android:layout_width="60dp"
-                                                android:layout_height="60dp"
-                                                android:background="@drawable/rounded_button_orange"
-                                                android:contentDescription="Orange Character"
-                                                android:layout_margin="8dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                                            <ImageButton
-                                                android:id="@+id/btnPurple"
-                                                android:layout_width="60dp"
-                                                android:layout_height="60dp"
-                                                android:background="@drawable/rounded_button_purple"
-                                                android:contentDescription="Purple Character"
-                                                android:layout_margin="8dp" />
+                <ImageButton
+                    android:id="@+id/btnOrange"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_orange"
+                    android:contentDescription="Orange Character"
+                    android:layout_margin="8dp" />
 
-                                        </LinearLayout>
+                <ImageButton
+                    android:id="@+id/btnPink"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_pink"
+                    android:contentDescription="Pink Character"
+                    android:layout_margin="8dp" />
 
-                                        <LinearLayout
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/btnTurquoise"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_turquoise"
+                    android:contentDescription="Turquoise Character"
+                    android:layout_margin="8dp" />
 
-                                            <ImageButton
-                                                android:id="@+id/btnLime"
-                                                android:layout_width="60dp"
-                                                android:layout_height="60dp"
-                                                android:background="@drawable/rounded_button_lime"
-                                                android:contentDescription="Lime Character"
-                                                android:layout_margin="8dp" />
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnMagenta"-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="60dp"-->
+<!--                    android:background="@drawable/rounded_button_magenta"-->
+<!--                    android:contentDescription="Magenta Character"-->
+<!--                    android:layout_margin="8dp" />-->
+            </LinearLayout>
 
-                                            <ImageButton
-                                                android:id="@+id/btnPink"
-                                                android:layout_width="60dp"
-                                                android:layout_height="60dp"
-                                                android:background="@drawable/rounded_button_pink"
-                                                android:contentDescription="Pink Character"
-                                                android:layout_margin="8dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                                            <ImageButton
-                                                android:id="@+id/btnBrown"
-                                                android:layout_width="60dp"
-                                                android:layout_height="60dp"
-                                                android:background="@drawable/rounded_button_brown"
-                                                android:contentDescription="Brown Character"
-                                                android:layout_margin="8dp" />
+                <ImageButton
+                    android:id="@+id/btnWhite"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_white"
+                    android:contentDescription="White Character"
+                    android:layout_margin="8dp" />
 
-                                            <ImageButton
-                                                android:id="@+id/btnTeal"
-                                                android:layout_width="60dp"
-                                                android:layout_height="60dp"
-                                                android:background="@drawable/rounded_button_teal"
-                                                android:contentDescription="Teal Character"
-                                                android:layout_margin="8dp" />
 
-                                        </LinearLayout>
-                -->
+                <ImageButton
+                    android:id="@+id/btnBlack"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_button_black"
+                    android:contentDescription="Black Character"
+                    android:layout_margin="8dp" />
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnBrown"-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="60dp"-->
+<!--                    android:background="@drawable/rounded_button_brown"-->
+<!--                    android:contentDescription="Brown Character"-->
+<!--                    android:layout_margin="8dp" />-->
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnTeal"-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="60dp"-->
+<!--                    android:background="@drawable/rounded_button_teal"-->
+<!--                    android:contentDescription="Teal Character"-->
+<!--                    android:layout_margin="8dp" />-->
+
+            </LinearLayout>
+
                     </LinearLayout>
 
                     <Button
