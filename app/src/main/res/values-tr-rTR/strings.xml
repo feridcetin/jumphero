@@ -31,5 +31,15 @@
     <string name="advanced_theme">Gelişmiş Tema</string>
     <string name="character_selection">Karakter Seçimi</string>
     <string name="save_ad_button">Kaydet (Reklam İzle)</string>
+    <string name="muzik_ayarlar">Müzik Ayarları</string>
+    <string name="muzik_secimi">Müzik Seçimi</string>
+    <string name="fon_muzigi">Fon Müziği</string>
+    <string name="can_kazanma">Can Kazanma</string>
+    <string name="can_kaybetme">Can Kaybetme</string>
+    <string name="muzikleri_kaydet">Müzikleri Kaydet</string>
+    <string name="muzik_win1">Kazanma 1</string>
+    <string name="muzik_win2">Kazanma 2</string>
+    <string name="muzik_lose1">Kaybetme 1</string>
+    <string name="muzik_lose2">Kaybetme 2</string>
 
 </resources>

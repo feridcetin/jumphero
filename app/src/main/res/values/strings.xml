@@ -31,5 +31,15 @@
     <string name="advanced_theme">Advanced Theme</string>
     <string name="character_selection">Character Selection</string>
     <string name="save_ad_button">Save (Watch Ad)</string>
+    <string name="muzik_ayarlar">Music Settings</string>
+    <string name="muzik_secimi">Music Selection</string>
+    <string name="fon_muzigi">Background Music</string>
+    <string name="can_kazanma">Win a Life</string>
+    <string name="can_kaybetme">Loss of Life</string>
+    <string name="muzikleri_kaydet">Save Music</string>
+    <string name="muzik_win1">Win 1</string>
+    <string name="muzik_win2">Win 2</string>
+    <string name="muzik_lose1">Lose 1</string>
+    <string name="muzik_lose2">Lose 2</string>
 
 </resources>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#202020"
+    android:fillViewport="true"
+    tools:context=".MusicSettingActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/muzik_secimi"
+            android:textSize="32sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:background="#333333"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/fon_muzigi"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"/>
+
+                <Switch
+                    android:id="@+id/switch_bg_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumbTint="#FFFFFF"
+                    android:trackTint="#666666"/>
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/rg_bg_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_bg_music1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Müzik 1"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"/>
+
+                <RadioButton
+                    android:id="@+id/rb_bg_music2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Müzik 2"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"/>
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:background="#333333"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/can_kazanma"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"/>
+
+                <Switch
+                    android:id="@+id/switch_win_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumbTint="#FFFFFF"
+                    android:trackTint="#666666"/>
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/rg_win_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_win_music1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/muzik_win1"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"/>
+
+                <RadioButton
+                    android:id="@+id/rb_win_music2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/muzik_win2"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"/>
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:background="#333333"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/can_kaybetme"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"/>
+
+                <Switch
+                    android:id="@+id/switch_lose_music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumbTint="#FFFFFF"
+                    android:trackTint="#666666"/>
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/rg_lose_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_lose_music1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/muzik_lose1"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"/>
+
+                <RadioButton
+                    android:id="@+id/rb_lose_music2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/muzik_lose2"
+                    android:textColor="#FFFFFF"
+                    android:buttonTint="#FFFFFF"/>
+            </RadioGroup>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_save_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/muzikleri_kaydet"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+</ScrollView>
