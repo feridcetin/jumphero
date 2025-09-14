@@ -3,6 +3,7 @@ package com.feridcetin.jumphero
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -10,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
@@ -29,6 +31,18 @@ class SettingActivity : AppCompatActivity() {
 
     private var selectedCharacterColor: Int = R.drawable.rounded_button_red
     private lateinit var characterButtons: List<ImageButton>
+
+    private val colorDrawables = mapOf(
+        R.id.btnRed to R.drawable.rounded_button_red,
+        R.id.btnBlue to R.drawable.rounded_button_blue,
+        R.id.btnGreen to R.drawable.rounded_button_green,
+        R.id.btnYellow to R.drawable.rounded_button_yellow,
+        R.id.btnOrange to R.drawable.rounded_button_orange,
+        R.id.btnPink to R.drawable.rounded_button_pink,
+        R.id.btnTurquoise to R.drawable.rounded_button_turquoise,
+        R.id.btnWhite to R.drawable.rounded_button_white,
+        R.id.btnBlack to R.drawable.rounded_button_black
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,15 +68,11 @@ class SettingActivity : AppCompatActivity() {
             findViewById(R.id.btnPink),
             findViewById(R.id.btnTurquoise),
             findViewById(R.id.btnWhite),
-            findViewById(R.id.btnBlack)/*,
-            findViewById(R.id.btnPink),
-            findViewById(R.id.btnBrown),
-            findViewById(R.id.btnTeal)*/
+            findViewById(R.id.btnBlack)
         )
 
         loadSettings()
 
-        // Dil butonu tıklama olayları
         btnLangEn.setOnClickListener {
             saveStringSetting("language", "en")
             LocaleHelper.setLocaleAndRestart(this, "en")
@@ -74,7 +84,6 @@ class SettingActivity : AppCompatActivity() {
             updateLanguageButtons()
         }
 
-        // Tema ve Karakter anahtarı tıklama olayları
         switchPremiumCharacter.setOnCheckedChangeListener { _, isChecked ->
             saveBooleanSetting("hasCharactersPack", isChecked)
         }
@@ -82,28 +91,13 @@ class SettingActivity : AppCompatActivity() {
             saveBooleanSetting("hasAdvancedTheme", isChecked)
         }
 
-        // Karakter butonu tıklama olayları
         characterButtons.forEach { button ->
             button.setOnClickListener {
-                when (it.id) {
-                    R.id.btnRed -> selectedCharacterColor = R.drawable.rounded_button_red
-                    R.id.btnBlue -> selectedCharacterColor = R.drawable.rounded_button_blue
-                    R.id.btnGreen -> selectedCharacterColor = R.drawable.rounded_button_green
-                    R.id.btnYellow -> selectedCharacterColor = R.drawable.rounded_button_yellow
-                    R.id.btnOrange -> selectedCharacterColor = R.drawable.rounded_button_orange
-                    R.id.btnPink -> selectedCharacterColor = R.drawable.rounded_button_pink
-                    R.id.btnTurquoise -> selectedCharacterColor = R.drawable.rounded_button_turquoise
-                    R.id.btnWhite -> selectedCharacterColor = R.drawable.rounded_button_white
-                    R.id.btnBlack -> selectedCharacterColor = R.drawable.rounded_button_black
-                 /*     R.id.btnPink -> selectedCharacterColor = Color.parseColor("#FFC0CB") // Pink
-                    R.id.btnBrown -> selectedCharacterColor = Color.parseColor("#A52A2A") // Brown
-                    R.id.btnTeal -> selectedCharacterColor = Color.parseColor("#008080") // Teal*/
-                }
+                selectedCharacterColor = colorDrawables[it.id] ?: R.drawable.rounded_button_red
                 updateCharacterSelectionUI()
             }
         }
 
-        // Kaydet butonu tıklama olayı
         btnSaveCharacter.setOnClickListener {
             showRewardedAd()
         }
@@ -124,21 +118,19 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun updateCharacterSelectionUI() {
+        val selectedBorderDrawable = ContextCompat.getDrawable(this, R.drawable.rounded_button_border)
+
         characterButtons.forEach { button ->
-            button.elevation = 0f
-            when (button.id) {
-                R.id.btnRed -> if (selectedCharacterColor == R.drawable.rounded_button_red) button.elevation = 10f
-                R.id.btnBlue -> if (selectedCharacterColor ==R.drawable.rounded_button_blue) button.elevation = 10f
-                R.id.btnGreen -> if (selectedCharacterColor == R.drawable.rounded_button_green) button.elevation = 10f
-                R.id.btnYellow -> if (selectedCharacterColor == R.drawable.rounded_button_yellow) button.elevation = 10f
-                R.id.btnOrange -> if (selectedCharacterColor == R.drawable.rounded_button_orange) button.elevation = 10f
-                R.id.btnPink -> if (selectedCharacterColor == R.drawable.rounded_button_pink) button.elevation = 10f
-                R.id.btnTurquoise -> if (selectedCharacterColor ==  R.drawable.rounded_button_turquoise) button.elevation = 10f
-                R.id.btnWhite -> if (selectedCharacterColor == R.drawable.rounded_button_white) button.elevation = 10f
-                R.id.btnBlack -> if (selectedCharacterColor == R.drawable.rounded_button_black) button.elevation = 10f
-              /*    R.id.btnPink -> if (selectedCharacterColor == Color.parseColor("#FFC0CB")) button.elevation = 10f
-                R.id.btnBrown -> if (selectedCharacterColor == Color.parseColor("#A52A2A")) button.elevation = 10f
-                R.id.btnTeal -> if (selectedCharacterColor == Color.parseColor("#008080")) button.elevation = 10f*/
+            val colorDrawableId = colorDrawables[button.id]
+            if (colorDrawableId != null) {
+                if (colorDrawableId == selectedCharacterColor) {
+                    val colorDrawable = ContextCompat.getDrawable(this, colorDrawableId)
+                    val layers = arrayOf(colorDrawable, selectedBorderDrawable)
+                    val layerDrawable = LayerDrawable(layers)
+                    button.background = layerDrawable
+                } else {
+                    button.background = ContextCompat.getDrawable(this, colorDrawableId)
+                }
             }
         }
     }
@@ -188,7 +180,5 @@ class SettingActivity : AppCompatActivity() {
         }
 
         val selectedCharacterColor_Log = sharedPref.getInt("selected_character_color", R.drawable.character_default)
-
-        //Log.e("SettingActivity", "selected_character_color_Log= ${selectedCharacterColor_Log}, selectedCharacterColor= ${selectedCharacterColor}")
     }
 }
