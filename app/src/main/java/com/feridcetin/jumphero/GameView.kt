@@ -82,9 +82,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private val uiIconSize = 80f
 
     private var mediaPlayer: MediaPlayer? = null
+    private var bgMediaPlayer: MediaPlayer? = null
 
+    private var selectedBgMusicId: Int = 0
     private var selectedWinMusicId: Int = 0
     private var selectedLoseMusicId: Int = 0
+    private var bgMusicEnabled: Boolean = false
     private var winMusicEnabled: Boolean = false
     private var loseMusicEnabled: Boolean = false
 
@@ -96,6 +99,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         val hasAdvancedTheme = sharedPref.getBoolean("hasAdvancedTheme", false)
 
         // Müzik ayarlarını SharedPreferences'tan alıyoruz
+        bgMusicEnabled = sharedPref.getBoolean("bg_music_enabled", true)
+        selectedBgMusicId = sharedPref.getInt("selected_bg_music", R.raw.bg1)
         selectedWinMusicId = sharedPref.getInt("selected_win_music", R.raw.win1)
         selectedLoseMusicId = sharedPref.getInt("selected_lose_music", R.raw.lose1)
         winMusicEnabled = sharedPref.getBoolean("win_music_enabled", true)
@@ -141,6 +146,11 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         thread = Thread(this)
+        if (bgMusicEnabled) {
+            bgMediaPlayer = MediaPlayer.create(context, selectedBgMusicId)
+            bgMediaPlayer?.isLooping = true
+            bgMediaPlayer?.start()
+        }
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -172,6 +182,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
         mediaPlayer?.release()
         mediaPlayer = null
+        bgMediaPlayer?.release()
+        bgMediaPlayer = null
     }
 
     override fun run() {
@@ -409,6 +421,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
                 positiveButton.setOnClickListener {
                     dialog.dismiss()
+                    setPaused(true) // Reklam izlemek istendiğinde müziği duraklat
                     savedObstacleSpeed = obstacleSpeed // Mevcut hızı kaydet
                     (context as GameActivity).showRewardedAd()
                 }
@@ -466,7 +479,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                 obstacleSpeed = savedObstacleSpeed // Kaydedilmiş hızı geri yükle
                 resetCharacterAndObstacles()
                 isGameOver = false
-                setPaused(false)
+                setPaused(false) // Oyun devam ettiğinde müziği tekrar başlat
                 resume()
             }
 
@@ -522,6 +535,11 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     fun setPaused(paused: Boolean) {
         isPaused = paused
+        if (paused) {
+            bgMediaPlayer?.pause()
+        } else {
+            bgMediaPlayer?.start()
+        }
     }
 
     fun getPaused(): Boolean {
