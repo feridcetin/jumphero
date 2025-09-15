@@ -1,201 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#202020"
-    android:fillViewport="true"
+    android:background="@drawable/background"
     tools:context=".MusicSettingActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/muzik_secimi"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         android:padding="16dp"
-        android:gravity="center_horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/muzik_secimi"
-            android:textSize="32sp"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:background="#333333"
-            android:layout_marginBottom="16dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
+                android:layout_weight="1"
+                android:text="@string/fon_muzigi"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/fon_muzigi"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"/>
-
-                <Switch
-                    android:id="@+id/switch_bg_music"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:thumbTint="#FFFFFF"
-                    android:trackTint="#666666"/>
-            </LinearLayout>
-
-            <RadioGroup
-                android:id="@+id/rg_bg_music"
-                android:layout_width="match_parent"
+            <Switch
+                android:id="@+id/switch_bg_music"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:checked="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:thumbTint="@color/switch_thumb_color"
+                android:trackTint="@color/switch_track_color" />
 
-                <RadioButton
-                    android:id="@+id/rb_bg_music1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Müzik 1"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"/>
-
-                <RadioButton
-                    android:id="@+id/rb_bg_music2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Müzik 2"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"/>
-            </RadioGroup>
         </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/rg_bg_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rb_bg_music1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/bg_music1_text"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white" />
+
+            <RadioButton
+                android:id="@+id/rb_bg_music2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/bg_music2_text"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white" />
+        </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:background="#333333"
-            android:layout_marginBottom="16dp">
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
+                android:layout_weight="1"
+                android:text="@string/can_kazanma"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/can_kazanma"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"/>
-
-                <Switch
-                    android:id="@+id/switch_win_music"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:thumbTint="#FFFFFF"
-                    android:trackTint="#666666"/>
-            </LinearLayout>
-
-            <RadioGroup
-                android:id="@+id/rg_win_music"
-                android:layout_width="match_parent"
+            <Switch
+                android:id="@+id/switch_win_music"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/rb_win_music1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/muzik_win1"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"/>
-
-                <RadioButton
-                    android:id="@+id/rb_win_music2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/muzik_win2"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"/>
-            </RadioGroup>
+                android:checked="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:thumbTint="@color/switch_thumb_color"
+                android:trackTint="@color/switch_track_color" />
         </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/rg_win_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rb_win_music1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/win_music1_text"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white" />
+
+            <RadioButton
+                android:id="@+id/rb_win_music2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/win_music2_text"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white" />
+        </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:background="#333333"
-            android:layout_marginBottom="16dp">
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="4dp">
+                android:layout_weight="1"
+                android:text="@string/can_kaybetme"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/can_kaybetme"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"/>
-
-                <Switch
-                    android:id="@+id/switch_lose_music"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:thumbTint="#FFFFFF"
-                    android:trackTint="#666666"/>
-            </LinearLayout>
-
-            <RadioGroup
-                android:id="@+id/rg_lose_music"
-                android:layout_width="match_parent"
+            <Switch
+                android:id="@+id/switch_lose_music"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/rb_lose_music1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/muzik_lose1"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"/>
-
-                <RadioButton
-                    android:id="@+id/rb_lose_music2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/muzik_lose2"
-                    android:textColor="#FFFFFF"
-                    android:buttonTint="#FFFFFF"/>
-            </RadioGroup>
+                android:checked="true"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:thumbTint="@color/switch_thumb_color"
+                android:trackTint="@color/switch_track_color" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_save_music"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/rg_lose_music"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/muzikleri_kaydet"
-            android:padding="8dp"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
 
+            <RadioButton
+                android:id="@+id/rb_lose_music1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/lose_music1_text"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white" />
+
+            <RadioButton
+                android:id="@+id/rb_lose_music2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/lose_music2_text"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white" />
+        </RadioGroup>
     </LinearLayout>
-</ScrollView>
+
+    <Button
+        android:id="@+id/btn_save_music"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#FFD700"
+        android:padding="16dp"
+        android:text="@string/muzikleri_kaydet"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

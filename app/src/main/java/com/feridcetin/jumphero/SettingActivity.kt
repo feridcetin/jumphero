@@ -43,7 +43,10 @@ class SettingActivity : AppCompatActivity() {
         R.id.btnPink to R.drawable.rounded_button_pink,
         R.id.btnTurquoise to R.drawable.rounded_button_turquoise,
         R.id.btnWhite to R.drawable.rounded_button_white,
-        R.id.btnBlack to R.drawable.rounded_button_black
+        R.id.btnBlack to R.drawable.rounded_button_black,
+        R.id.btnBrown to R.drawable.rounded_button_brown,
+        R.id.btnGray to R.drawable.rounded_button_gray,
+        R.id.btnPurple to R.drawable.rounded_button_purple
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +74,10 @@ class SettingActivity : AppCompatActivity() {
             findViewById(R.id.btnPink),
             findViewById(R.id.btnTurquoise),
             findViewById(R.id.btnWhite),
-            findViewById(R.id.btnBlack)
+            findViewById(R.id.btnBlack),
+            findViewById(R.id.btnBrown),
+            findViewById(R.id.btnGray),
+            findViewById(R.id.btnPurple)
         )
 
         loadSettings()
@@ -188,6 +194,6 @@ class SettingActivity : AppCompatActivity() {
             apply()
         }
 
-        val selectedCharacterColor_Log = sharedPref.getInt("selected_character_color", R.drawable.character_default)
+        //val selectedCharacterColor_Log = sharedPref.getInt("selected_character_color", R.drawable.character_default)
     }
 }

@@ -212,12 +212,27 @@
                         android:background="@drawable/rounded_button_turquoise"
                         android:contentDescription="Turquoise Character"
                         android:layout_margin="4dp" />
+
+                    <ImageButton
+                        android:id="@+id/btnBrown"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/rounded_button_brown"
+                        android:contentDescription="Brown Character"
+                        android:layout_margin="4dp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/btnPurple"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/rounded_button_purple"
+                        android:contentDescription="Purple Character"
+                        android:layout_margin="4dp" />
 
                     <ImageButton
                         android:id="@+id/btnWhite"
@@ -227,13 +242,20 @@
                         android:contentDescription="White Character"
                         android:layout_margin="4dp" />
 
-
                     <ImageButton
                         android:id="@+id/btnBlack"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         android:background="@drawable/rounded_button_black"
                         android:contentDescription="Black Character"
+                        android:layout_margin="4dp" />
+
+                    <ImageButton
+                        android:id="@+id/btnGray"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/rounded_button_gray"
+                        android:contentDescription="Gray Character"
                         android:layout_margin="4dp" />
                 </LinearLayout>
 

@@ -41,5 +41,12 @@
     <string name="muzik_win2">Win 2</string>
     <string name="muzik_lose1">Lose 1</string>
     <string name="muzik_lose2">Lose 2</string>
+    <string name="music_settings_saved">Music settings saved!</string>
+    <string name="bg_music1_text">Music 1</string>
+    <string name="bg_music2_text">Music 2</string>
+    <string name="win_music1_text">Win 1</string>
+    <string name="win_music2_text">Win 2</string>
+    <string name="lose_music1_text">Lose 1</string>
+    <string name="lose_music2_text">Lose 2</string>
 
 </resources>

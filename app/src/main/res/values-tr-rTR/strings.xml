@@ -41,5 +41,12 @@
     <string name="muzik_win2">Kazanma 2</string>
     <string name="muzik_lose1">Kaybetme 1</string>
     <string name="muzik_lose2">Kaybetme 2</string>
+    <string name="music_settings_saved">Müzik ayarları kaydedildi!</string>
+    <string name="bg_music1_text">Müzik 1</string>
+    <string name="bg_music2_text">Müzik 2</string>
+    <string name="win_music1_text">Kazanma 1</string>
+    <string name="win_music2_text">Kazanma 2</string>
+    <string name="lose_music1_text">Kaybetme 1</string>
+    <string name="lose_music2_text">Kaybetme 2</string>
 
 </resources>

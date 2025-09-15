@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.media.MediaPlayer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -80,6 +81,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private lateinit var levelIconBitmap: Bitmap
     private val uiIconSize = 80f
 
+    private var mediaPlayer: MediaPlayer? = null
+
+    private var selectedWinMusicId: Int = 0
+    private var selectedLoseMusicId: Int = 0
+    private var winMusicEnabled: Boolean = false
+    private var loseMusicEnabled: Boolean = false
+
     init {
         holder.addCallback(this)
 
@@ -87,10 +95,15 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         val hasCharactersPack = sharedPref.getBoolean("hasCharactersPack", false)
         val hasAdvancedTheme = sharedPref.getBoolean("hasAdvancedTheme", false)
 
+        // Müzik ayarlarını SharedPreferences'tan alıyoruz
+        selectedWinMusicId = sharedPref.getInt("selected_win_music", R.raw.win1)
+        selectedLoseMusicId = sharedPref.getInt("selected_lose_music", R.raw.lose1)
+        winMusicEnabled = sharedPref.getBoolean("win_music_enabled", true)
+        loseMusicEnabled = sharedPref.getBoolean("lose_music_enabled", true)
 
         val selectedCharacterColor = sharedPref.getInt("selected_character_color", R.drawable.character_default)
 
-       //Log.e("GameView", "selected_character_color= ${selectedCharacterColor}")
+        //Log.e("GameView", "selected_character_color= ${selectedCharacterColor}")
 
         val characterResId = if (hasCharactersPack) R.drawable.character_premium else selectedCharacterColor
         //val characterResId = if (hasCharactersPack) R.drawable.character_premium else R.drawable.character_default
@@ -157,6 +170,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     override fun run() {
@@ -214,6 +229,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
 
         if (collisionOccurred) {
+            if (loseMusicEnabled) {
+                playMusic(selectedLoseMusicId)
+            }
             lives--
             if (lives <= 0) {
                 isGameOver = true
@@ -242,6 +260,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
 
         if (level > 0 && level % 3 == 0 && !isBonusLifeGiven) {
+            if (winMusicEnabled) {
+                playMusic(selectedWinMusicId)
+            }
             lives++
             isBonusLifeGiven = true
         }
@@ -505,6 +526,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     fun getPaused(): Boolean {
         return isPaused
+    }
+
+    private fun playMusic(resourceId: Int) {
+        mediaPlayer?.release()
+        mediaPlayer = MediaPlayer.create(context, resourceId)
+        mediaPlayer?.start()
     }
 
     data class Obstacle(var x: Float, var y: Float, var color: Int, var height: Float) {
