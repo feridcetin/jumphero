@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".BackgroundSettingActivity">
+
+    <TextView
+        android:id="@+id/textViewBackgroundSettingsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/background_selection_title"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_selected_background_preview"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewBackgroundSettingsTitle"/>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_selected_background_preview">
+
+        <RadioGroup
+            android:id="@+id/rg_background_images"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rb_background1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/background1_name"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:checked="true"
+                android:padding="8dp"/>
+            <RadioButton
+                android:id="@+id/rb_background2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/background2_name"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:padding="8dp"/>
+            <RadioButton
+                android:id="@+id/rb_background3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/background3_name"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:padding="8dp"/>
+            <RadioButton
+                android:id="@+id/rb_background4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/background4_name"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:padding="8dp"/>
+            <RadioButton
+                android:id="@+id/rb_background5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/background5_name"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:padding="8dp"/>
+        </RadioGroup>
+    </ScrollView>
+
+
+    <Button
+        android:id="@+id/btn_save_background"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#FFD700"
+        android:padding="16dp"
+        android:text="@string/save_background_settings_text"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

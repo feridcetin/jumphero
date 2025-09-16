@@ -32,6 +32,7 @@
     <string name="character_selection">Karakter Seçimi</string>
     <string name="save_ad_button">Kaydet (Reklam İzle)</string>
     <string name="muzik_ayarlar">Müzik Ayarları</string>
+    <string name="arkaResim_ayarlar">Arka Plan Ayarları</string>
     <string name="muzik_secimi">Müzik Seçimi</string>
     <string name="fon_muzigi">Fon Müziği</string>
     <string name="can_kazanma">Can Kazanma</string>
@@ -48,5 +49,17 @@
     <string name="win_music2_text">Kazanma 2</string>
     <string name="lose_music1_text">Kaybetme 1</string>
     <string name="lose_music2_text">Kaybetme 2</string>
+    <string name="scoreboard_button">Skor Tablosu</string>
+    <string name="background_settings_saved">Arka Plan Resmi Kaydedildi</string>
+    <string name="background1_name">Uzay</string>
+    <string name="background2_name">Ay</string>
+    <string name="background3_name">Çöl</string>
+    <string name="background4_name">Doğa</string>
+    <string name="background5_name">Şehir</string>
+    <string name="save_background_settings_text">Kaydet</string>
+    <string name="background_selection_title">Arka Plan Resmi Seçimini</string>
+    <string name="high_score_display">Yüksek Skor</string>
+    <string name="back_to_menu_button">Geri</string>
+    <string name="scoreboard_title">Skor Tablosu</string>
 
 </resources>

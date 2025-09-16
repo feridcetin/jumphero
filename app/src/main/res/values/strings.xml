@@ -32,6 +32,7 @@
     <string name="character_selection">Character Selection</string>
     <string name="save_ad_button">Save (Watch Ad)</string>
     <string name="muzik_ayarlar">Music Settings</string>
+    <string name="arkaResim_ayarlar">Background Settings</string>
     <string name="muzik_secimi">Music Selection</string>
     <string name="fon_muzigi">Background Music</string>
     <string name="can_kazanma">Win a Life</string>
@@ -48,5 +49,17 @@
     <string name="win_music2_text">Win 2</string>
     <string name="lose_music1_text">Lose 1</string>
     <string name="lose_music2_text">Lose 2</string>
+    <string name="scoreboard_button">Scoreboard</string>
+    <string name="background_settings_saved">Background image saved</string>
+    <string name="background1_name">Space</string>
+    <string name="background2_name">Moon</string>
+    <string name="background3_name">Desert</string>
+    <string name="background4_name">Nature</string>
+    <string name="background5_name">City</string>
+    <string name="save_background_settings_text">Save</string>
+    <string name="background_selection_title">Background Image Selection</string>
+    <string name="high_score_display">High Score Display</string>
+    <string name="back_to_menu_button">Back</string>
+    <string name="scoreboard_title">Scoreboard</string>
 
 </resources>

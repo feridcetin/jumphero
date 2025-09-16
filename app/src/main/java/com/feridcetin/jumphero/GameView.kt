@@ -91,6 +91,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var winMusicEnabled: Boolean = false
     private var loseMusicEnabled: Boolean = false
 
+    private var selectedBackgroundResId: Int = R.drawable.background // Varsayılan arka planınız
+
+
     init {
         holder.addCallback(this)
 
@@ -107,17 +110,17 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         loseMusicEnabled = sharedPref.getBoolean("lose_music_enabled", true)
 
         val selectedCharacterColor = sharedPref.getInt("selected_character_color", R.drawable.character_default)
-
-        //Log.e("GameView", "selected_character_color= ${selectedCharacterColor}")
-
         val characterResId = if (hasCharactersPack) R.drawable.character_premium else selectedCharacterColor
-        //val characterResId = if (hasCharactersPack) R.drawable.character_premium else R.drawable.character_default
+
         characterBitmap = BitmapFactory.decodeResource(resources, characterResId)
         characterBitmap = Bitmap.createScaledBitmap(characterBitmap, characterSize.toInt(), characterSize.toInt(), true)
+        // Seçilen arka plan resmini SharedPreferences'tan al
+        selectedBackgroundResId = sharedPref.getInt("selected_background", R.drawable.background)
 
         try {
-            backgroundBitmapOriginal = BitmapFactory.decodeResource(resources, R.drawable.background)
+            backgroundBitmapOriginal = BitmapFactory.decodeResource(resources, selectedBackgroundResId)
         } catch (e: Exception) {
+            backgroundBitmapOriginal = BitmapFactory.decodeResource(resources, R.drawable.background) // Varsayılan
             Log.e("GameView", "Arka plan resmi yüklenemedi: background.png dosyasını kontrol edin.", e)
         }
 
@@ -427,6 +430,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                 }
                 negativeButton.setOnClickListener {
                     dialog.dismiss()
+                    (context as GameActivity).saveHighScore(score) // Bu satırı ekleyin
                     (context as GameActivity).finish()
                 }
             } else {
@@ -441,6 +445,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                 }
                 negativeButton.setOnClickListener {
                     dialog.dismiss()
+                    (context as GameActivity).saveHighScore(score) // Bu satırı ekleyin
                     (context as GameActivity).finish()
                 }
             }

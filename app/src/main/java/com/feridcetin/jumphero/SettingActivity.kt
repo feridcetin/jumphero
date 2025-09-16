@@ -31,6 +31,8 @@ class SettingActivity : AppCompatActivity() {
     private lateinit var btnSaveCharacter: Button
     private lateinit var btnMusicSettings: Button // Yeni müzik butonu
 
+    private lateinit var btnBackgroundSettings: Button // Yeni müzik butonu
+
     private var selectedCharacterColor: Int = R.drawable.rounded_button_red
     private lateinit var characterButtons: List<ImageButton>
 
@@ -64,6 +66,7 @@ class SettingActivity : AppCompatActivity() {
         switchAdvancedTheme = findViewById(R.id.switch_advanced_theme)
         btnSaveCharacter = findViewById(R.id.btnSaveCharacter)
         btnMusicSettings = findViewById(R.id.btnMusicSettings) // Butonu tanımlıyoruz
+        btnBackgroundSettings = findViewById(R.id.btn_background_settings) // Butonu tanımlıyoruz
 
         characterButtons = listOf(
             findViewById(R.id.btnRed),
@@ -114,6 +117,11 @@ class SettingActivity : AppCompatActivity() {
         // Yeni butonun tıklama olayı
         btnMusicSettings.setOnClickListener {
             val intent = Intent(this, MusicSettingActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnBackgroundSettings.setOnClickListener { // Yeni butonun tıklama olayı
+            val intent = Intent(this, BackgroundSettingActivity::class.java)
             startActivity(intent)
         }
     }

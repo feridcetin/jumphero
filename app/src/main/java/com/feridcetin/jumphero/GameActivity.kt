@@ -14,6 +14,9 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
 
 class GameActivity : AppCompatActivity() {
 
@@ -101,5 +104,17 @@ class GameActivity : AppCompatActivity() {
         super.onDestroy()
         adViewTop.destroy()
         adViewBottom.destroy()
+    }
+
+    fun saveHighScore(score: Int) {
+        val sharedPref = getSharedPreferences("JumpHeroPrefs", Context.MODE_PRIVATE)
+        val currentHighScore = sharedPref.getInt("high_score", 0)
+
+        if (score > currentHighScore) {
+            with(sharedPref.edit()) {
+                putInt("high_score", score)
+                apply()
+            }
+        }
     }
 }

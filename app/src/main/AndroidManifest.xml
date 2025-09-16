@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jumphero">
         <activity
+            android:name=".ScoreboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BackgroundSettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".MusicSettingActivity"
             android:exported="false" />
         <activity

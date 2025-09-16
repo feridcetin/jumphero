@@ -12,6 +12,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var settingsButton: Button
     private lateinit var exitButton: Button
 
+    private lateinit var scoreboardButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         playButton = findViewById(R.id.btn_play)
         settingsButton = findViewById(R.id.btn_settings)
         exitButton = findViewById(R.id.btn_exit)
+        scoreboardButton = findViewById(R.id.btnScoreboard)
 
         // Buton tıklama dinleyicilerini ayarlama
         playButton.setOnClickListener {
@@ -35,6 +38,11 @@ class MainActivity : AppCompatActivity() {
 
         exitButton.setOnClickListener {
             finishAffinity()
+        }
+
+        scoreboardButton.setOnClickListener {
+            val intent = Intent(this, ScoreboardActivity::class.java)
+            startActivity(intent)
         }
     }
 }
