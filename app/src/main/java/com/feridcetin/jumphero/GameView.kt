@@ -362,11 +362,21 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     private fun createInitialObstacles() {
         obstacles.clear()
-        for (i in 0 until initialObstacleCount) {
+        /*for (i in 0 until initialObstacleCount) {
             val randomColor = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
             val currentObstacleHeight = baseObstacleHeight + (level - 1) * heightIncreasePerLevel
             val obstacleY = random.nextFloat() * (screenHeight - 400) + 200
             val obstacle = Obstacle(screenWidth.toFloat() + obstacleSpacing * i, obstacleY, randomColor, currentObstacleHeight)
+            obstacles.add(obstacle)
+        }*/
+        for (i in 0 until initialObstacleCount) {
+            val randomColor = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256))
+            val currentObstacleHeight = baseObstacleHeight + (level - 1) * heightIncreasePerLevel
+            val obstacleY = random.nextFloat() * (screenHeight - 400) + 200
+
+            // İlk engeli karakterden daha uzağa yerleştirin
+            val startOffset = if (i == 0) screenWidth / 2f else 0f
+            val obstacle = Obstacle(screenWidth.toFloat() + obstacleSpacing * i + startOffset, obstacleY, randomColor, currentObstacleHeight)
             obstacles.add(obstacle)
         }
     }
@@ -481,6 +491,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
             positiveButton.setOnClickListener {
                 dialog.dismiss()
+
                 obstacleSpeed = savedObstacleSpeed // Kaydedilmiş hızı geri yükle
                 resetCharacterAndObstacles()
                 isGameOver = false

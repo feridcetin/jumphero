@@ -40,6 +40,26 @@ class GameActivity : AppCompatActivity() {
         val adRequestBottom = AdRequest.Builder().build()
         adViewBottom.loadAd(adRequestBottom)
 
+        // Reklam dinleyicilerini ekleyin
+        adViewTop.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                // Reklam başarılı bir şekilde yüklendiğinde görünür yap
+                adViewTop.visibility = View.VISIBLE
+            }
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                // Reklam yüklenemezse görünmez yap
+                adViewTop.visibility = View.GONE
+            }
+        }
+        adViewBottom.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                adViewBottom.visibility = View.VISIBLE
+            }
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                adViewBottom.visibility = View.GONE
+            }
+        }
+
         gameView = GameView(this)
         findViewById<FrameLayout>(R.id.gameContainer).addView(gameView)
 
