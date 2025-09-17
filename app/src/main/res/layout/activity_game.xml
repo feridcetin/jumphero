@@ -14,7 +14,10 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-2120666198065087/8385738270" /> <FrameLayout
+        app:adUnitId="ca-app-pub-2120666198065087/8385738270"
+        android:visibility="visible"/>
+
+    <FrameLayout
     android:id="@+id/gameContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,4 +31,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         app:adSize="BANNER"
-        app:adUnitId="ca-app-pub-2120666198065087/8385738270" /> </RelativeLayout>
+        app:adUnitId="ca-app-pub-2120666198065087/8385738270"
+        android:visibility="visible"/>
+</RelativeLayout>

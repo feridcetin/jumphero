@@ -13,25 +13,26 @@ import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.android.billingclient.api.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
-class SettingActivity : AppCompatActivity() {
+class SettingActivity : AppCompatActivity(), PurchasesUpdatedListener {
 
     private lateinit var sharedPref: SharedPreferences
     private var mRewardedAd: RewardedAd? = null
+    private lateinit var billingClient: BillingClient
 
     private lateinit var btnLangEn: Button
     private lateinit var btnLangTr: Button
     private lateinit var switchPremiumCharacter: Switch
     private lateinit var switchAdvancedTheme: Switch
     private lateinit var btnSaveCharacter: Button
-    private lateinit var btnMusicSettings: Button // Yeni müzik butonu
-
-    private lateinit var btnBackgroundSettings: Button // Yeni müzik butonu
+    private lateinit var btnMusicSettings: Button
+    private lateinit var btnBackgroundSettings: Button
 
     private var selectedCharacterColor: Int = R.drawable.rounded_button_red
     private lateinit var characterButtons: List<ImageButton>
@@ -60,13 +61,39 @@ class SettingActivity : AppCompatActivity() {
 
         sharedPref = getSharedPreferences("JumpHeroPrefs", Context.MODE_PRIVATE)
 
+        initializeViews()
+        loadSettings()
+        setupListeners()
+
+        // BillingClient'ı başlat
+        billingClient = BillingClient.newBuilder(this)
+            .setListener(this)
+            .enablePendingPurchases()
+            .build()
+
+        // Google Play'e bağlan
+        billingClient.startConnection(object : BillingClientStateListener {
+            override fun onBillingSetupFinished(billingResult: BillingResult) {
+                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                    queryPurchaseHistory()
+                } else {
+                    Log.e("Billing", "Faturalandırma hizmeti bağlantısı kurulamadı: ${billingResult.responseCode}")
+                }
+            }
+            override fun onBillingServiceDisconnected() {
+                Log.d("Billing", "Faturalandırma hizmeti bağlantısı kesildi.")
+            }
+        })
+    }
+
+    private fun initializeViews() {
         btnLangEn = findViewById(R.id.btn_lang_en)
         btnLangTr = findViewById(R.id.btn_lang_tr)
         switchPremiumCharacter = findViewById(R.id.switch_premium_character)
         switchAdvancedTheme = findViewById(R.id.switch_advanced_theme)
         btnSaveCharacter = findViewById(R.id.btnSaveCharacter)
-        btnMusicSettings = findViewById(R.id.btnMusicSettings) // Butonu tanımlıyoruz
-        btnBackgroundSettings = findViewById(R.id.btn_background_settings) // Butonu tanımlıyoruz
+        btnMusicSettings = findViewById(R.id.btnMusicSettings)
+        btnBackgroundSettings = findViewById(R.id.btn_background_settings)
 
         characterButtons = listOf(
             findViewById(R.id.btnRed),
@@ -82,9 +109,17 @@ class SettingActivity : AppCompatActivity() {
             findViewById(R.id.btnGray),
             findViewById(R.id.btnPurple)
         )
+    }
 
-        loadSettings()
+    private fun loadSettings() {
+        updateLanguageButtons()
+        switchPremiumCharacter.isChecked = sharedPref.getBoolean("hasCharactersPack", false)
+        switchAdvancedTheme.isChecked = sharedPref.getBoolean("hasAdvancedTheme", false)
+        selectedCharacterColor = sharedPref.getInt("selected_character_color", R.drawable.rounded_button_red)
+        updateCharacterSelectionUI()
+    }
 
+    private fun setupListeners() {
         btnLangEn.setOnClickListener {
             saveStringSetting("language", "en")
             LocaleHelper.setLocaleAndRestart(this, "en")
@@ -97,8 +132,15 @@ class SettingActivity : AppCompatActivity() {
         }
 
         switchPremiumCharacter.setOnCheckedChangeListener { _, isChecked ->
-            saveBooleanSetting("hasCharactersPack", isChecked)
+            if (isChecked) {
+                if (!sharedPref.getBoolean("hasCharactersPack", false)) {
+                    buyPremiumCharacter()
+                }
+            } else {
+                switchPremiumCharacter.isChecked = true
+            }
         }
+
         switchAdvancedTheme.setOnCheckedChangeListener { _, isChecked ->
             saveBooleanSetting("hasAdvancedTheme", isChecked)
         }
@@ -114,24 +156,15 @@ class SettingActivity : AppCompatActivity() {
             showRewardedAd()
         }
 
-        // Yeni butonun tıklama olayı
         btnMusicSettings.setOnClickListener {
             val intent = Intent(this, MusicSettingActivity::class.java)
             startActivity(intent)
         }
 
-        btnBackgroundSettings.setOnClickListener { // Yeni butonun tıklama olayı
+        btnBackgroundSettings.setOnClickListener {
             val intent = Intent(this, BackgroundSettingActivity::class.java)
             startActivity(intent)
         }
-    }
-
-    private fun loadSettings() {
-        updateLanguageButtons()
-        switchPremiumCharacter.isChecked = sharedPref.getBoolean("hasCharactersPack", false)
-        switchAdvancedTheme.isChecked = sharedPref.getBoolean("hasAdvancedTheme", false)
-        selectedCharacterColor = sharedPref.getInt("selected_character_color", R.drawable.rounded_button_red)
-        updateCharacterSelectionUI()
     }
 
     private fun updateLanguageButtons() {
@@ -201,7 +234,90 @@ class SettingActivity : AppCompatActivity() {
             putInt("selected_character_color", selectedCharacterColor)
             apply()
         }
+    }
 
-        //val selectedCharacterColor_Log = sharedPref.getInt("selected_character_color", R.drawable.character_default)
+    // Google Play Billing Metotları
+    private fun buyPremiumCharacter() {
+        if (!billingClient.isReady) {
+            Toast.makeText(this, "Faturalandırma hizmeti henüz hazır değil. Lütfen tekrar deneyin.", Toast.LENGTH_SHORT).show()
+            switchPremiumCharacter.isChecked = false
+            return
+        }
+
+        val productList = listOf(
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId("premium_character_pack")
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        )
+
+        val params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build()
+
+        billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && !productDetailsList.isNullOrEmpty()) {
+                val productDetails = productDetailsList[0]
+                val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(productDetails)
+                    .build()
+
+                val flowParams = BillingFlowParams.newBuilder()
+                    .setProductDetailsParamsList(listOf(productDetailsParams))
+                    .build()
+
+                billingClient.launchBillingFlow(this, flowParams)
+            } else {
+                runOnUiThread {
+                    Toast.makeText(this, "Ürün bilgileri yüklenemedi. Lütfen internet bağlantınızı kontrol edin.", Toast.LENGTH_LONG).show()
+                    switchPremiumCharacter.isChecked = false
+                }
+            }
+        }
+    }
+
+    override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && !purchases.isNullOrEmpty()) {
+            for (purchase in purchases) {
+                if (purchase.products.contains("premium_character_pack")) {
+                    with(sharedPref.edit()) {
+                        putBoolean("hasCharactersPack", true)
+                        apply()
+                    }
+                    switchPremiumCharacter.isChecked = true
+                    Toast.makeText(this, "Premium karakter satın alındı!", Toast.LENGTH_LONG).show()
+                }
+            }
+        } else {
+            Toast.makeText(this, "Satın alma işlemi iptal edildi veya başarısız oldu.", Toast.LENGTH_LONG).show()
+            switchPremiumCharacter.isChecked = false
+        }
+    }
+
+    private fun queryPurchaseHistory() {
+        if (!billingClient.isReady) {
+            Log.e("Billing", "queryPurchaseHistory çağrıldığında BillingClient henüz hazır değildi.")
+            return
+        }
+
+        val params = QueryPurchasesParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build()
+
+        billingClient.queryPurchasesAsync(params) { billingResult, purchases ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                if (!purchases.isNullOrEmpty()) {
+                    for (purchase in purchases) {
+                        if (purchase.products.contains("premium_character_pack")) {
+                            with(sharedPref.edit()) {
+                                putBoolean("hasCharactersPack", true)
+                                apply()
+                            }
+                            switchPremiumCharacter.isChecked = true
+                        }
+                    }
+                }
+            }
+        }
     }
 }
