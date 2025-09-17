@@ -142,7 +142,13 @@ class SettingActivity : AppCompatActivity(), PurchasesUpdatedListener {
         }
 
         switchAdvancedTheme.setOnCheckedChangeListener { _, isChecked ->
-            saveBooleanSetting("hasAdvancedTheme", isChecked)
+            if (isChecked) {
+                if (!sharedPref.getBoolean("hasAdvancedTheme", false)) {
+                    buyAdvancedTheme()
+                }
+            } else {
+                switchAdvancedTheme.isChecked = true
+            }
         }
 
         characterButtons.forEach { button ->
@@ -276,6 +282,45 @@ class SettingActivity : AppCompatActivity(), PurchasesUpdatedListener {
         }
     }
 
+    private fun buyAdvancedTheme() {
+        if (!billingClient.isReady) {
+            Toast.makeText(this, "Faturalandırma hizmeti henüz hazır değil. Lütfen tekrar deneyin.", Toast.LENGTH_SHORT).show()
+            switchAdvancedTheme.isChecked = false
+            return
+        }
+
+        val productList = listOf(
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId("advanced_theme_pack") // Yeni ürün kimliğimiz
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        )
+
+        val params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build()
+
+        billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && !productDetailsList.isNullOrEmpty()) {
+                val productDetails = productDetailsList[0]
+                val productDetailsParams = BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(productDetails)
+                    .build()
+
+                val flowParams = BillingFlowParams.newBuilder()
+                    .setProductDetailsParamsList(listOf(productDetailsParams))
+                    .build()
+
+                billingClient.launchBillingFlow(this, flowParams)
+            } else {
+                runOnUiThread {
+                    Toast.makeText(this, "Ürün bilgileri yüklenemedi. Lütfen internet bağlantınızı kontrol edin.", Toast.LENGTH_LONG).show()
+                    switchAdvancedTheme.isChecked = false
+                }
+            }
+        }
+    }
+
     override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && !purchases.isNullOrEmpty()) {
             for (purchase in purchases) {
@@ -286,11 +331,19 @@ class SettingActivity : AppCompatActivity(), PurchasesUpdatedListener {
                     }
                     switchPremiumCharacter.isChecked = true
                     Toast.makeText(this, "Premium karakter satın alındı!", Toast.LENGTH_LONG).show()
+                } else if (purchase.products.contains("advanced_theme_pack")) {
+                    with(sharedPref.edit()) {
+                        putBoolean("hasAdvancedTheme", true)
+                        apply()
+                    }
+                    switchAdvancedTheme.isChecked = true
+                    Toast.makeText(this, "Gelişmiş tema satın alındı!", Toast.LENGTH_LONG).show()
                 }
             }
         } else {
             Toast.makeText(this, "Satın alma işlemi iptal edildi veya başarısız oldu.", Toast.LENGTH_LONG).show()
-            switchPremiumCharacter.isChecked = false
+            switchPremiumCharacter.isChecked = sharedPref.getBoolean("hasCharactersPack", false)
+            switchAdvancedTheme.isChecked = sharedPref.getBoolean("hasAdvancedTheme", false)
         }
     }
 
@@ -314,6 +367,13 @@ class SettingActivity : AppCompatActivity(), PurchasesUpdatedListener {
                                 apply()
                             }
                             switchPremiumCharacter.isChecked = true
+                        }
+                        if (purchase.products.contains("advanced_theme_pack")) {
+                            with(sharedPref.edit()) {
+                                putBoolean("hasAdvancedTheme", true)
+                                apply()
+                            }
+                            switchAdvancedTheme.isChecked = true
                         }
                     }
                 }
