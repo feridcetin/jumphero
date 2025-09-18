@@ -117,6 +117,9 @@ class SettingActivity : AppCompatActivity(), PurchasesUpdatedListener {
         switchAdvancedTheme.isChecked = sharedPref.getBoolean("hasAdvancedTheme", false)
         selectedCharacterColor = sharedPref.getInt("selected_character_color", R.drawable.rounded_button_red)
         updateCharacterSelectionUI()
+       /*Log.e("this", "hasCharactersPack = ${sharedPref.getBoolean("hasCharactersPack", false)} " +
+                                                "hasAdvancedTheme = ${sharedPref.getBoolean("hasAdvancedTheme", false)} " +
+                                                "selected_character_color = ${ sharedPref.getInt("selected_character_color", R.drawable.rounded_button_red)} " )*/
     }
 
     private fun setupListeners() {
